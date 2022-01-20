@@ -10,7 +10,7 @@ def main(argv):
     lexer = LilypondLexer(source)
     tokens = antlr.CommonTokenStream(lexer)
     parser = LilypondParser(tokens)
-    tree = parser.score()
+    tree = parser.score_file()
 
 if __name__ == '__main__':
     main(sys.argv)

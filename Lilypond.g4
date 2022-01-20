@@ -1,32 +1,41 @@
 grammar Lilypond;
 
-score        : KW LBRACE staff? RBRACE;
-staff        : KW OBJ_TYPE with_block? LBRACE line+ RBRACE;
-with_block   : KW LBRACE assignment* RBRACE;
-prefix_block : line+;
-line         : KW (~SLASH)*;
-assignment   : NAME '=' STRING;
-// voice        : KW 'Voice' LBRACE NOTE* RBRACE;
+score_file  : score_block;
+score_block : SCORE_KW LBRACE staff* RBRACE;
+staff:
+    STAFF_CTX with_block? LBRACE prefix_block? voice_block RBRACE;
+prefix_block : time_cmd;
+with_block   : WITH_KW LBRACE assignment* RBRACE;
+voice_block  : VOICE_CTX LBRACE note_block* RBRACE;
+note_block   : ( time_cmd | NOTE)+;
+time_cmd     : TIME_KW TIME_SIG;
+assignment   : ID '=' STRING;
 
-STRING   : '"' LETTER+ '"';
-OBJ_TYPE : ('Score' | 'Staff' | 'Voice');
-NOTE     : LETTER OCTAVE? DURATION?;
-OCTAVE   : '\''+ | ','+;
-DURATION : DIGIT+ '.'?;
-KW       : SLASH LETTER+;
-NAME     : LETTER+;
+// Contexts
+STAFF_CTX : '\\new Staff';
+VOICE_CTX : '\\new Voice';
 
-LBRACE : '{';
-RBRACE : '}';
-SLASH  : '\\';
+// Commands
+LAYOUT_KW : '\\layout';
+SCORE_KW  : '\\score';
+TIME_KW   : '\\time';
+WITH_KW   : '\\with';
+KW        : SLASH LETTER+;
 
+TIME_SIG  : INTEGER '/' INTEGER;
+STRING    : '"' LETTER+ '"';
+NOTE      : LETTER OCTAVE? DURATION?;
+OCTAVE    : '\''+ | ','+;
+DURATION  : INTEGER '.'?;
+ID        : (LETTER | '.' | '/')+;
+SCM_TOKEN : '#' .+? WS;
+
+LBRACE          : '{';
+RBRACE          : '}';
+SLASH           : '\\';
+INTEGER         : DIGIT+;
 fragment LETTER : [a-zA-Z];
-// fragment NOTE_CLASS : [a-g];
-fragment DIGIT : [0-9]+;
+fragment DIGIT  : [0-9];
 
 WS  : [ \t\r\n]+ -> skip;
 ALL : .+? -> skip;
-
-// ---- Discarded rules SCORE_T '{' (staff_group | staff)? layout_block? midi_block? '}' version?;
-// staff_group: NEW_T 'StaffGroup' with_block? '<<' global? voices* '>>'; layout_block: LAYOUT_T
-// LBRACE RBRACE SCORE_KW : '\\score'; NEW_KW : '\\new'; LAYOUT_KW : '\\layout'; WITH_KW : '\\with';
