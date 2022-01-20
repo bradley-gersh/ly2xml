@@ -11,31 +11,27 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24")
-        buf.write("M\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
-        buf.write("\t\b\3\2\3\2\3\2\5\2\24\n\2\3\2\3\2\3\3\3\3\3\3\5\3\33")
-        buf.write("\n\3\3\3\3\3\5\3\37\n\3\3\3\5\3\"\n\3\3\3\3\3\3\4\3\4")
-        buf.write("\3\4\7\4)\n\4\f\4\16\4,\13\4\3\4\3\4\3\5\6\5\61\n\5\r")
-        buf.write("\5\16\5\62\3\6\3\6\7\6\67\n\6\f\6\16\6:\13\6\3\7\3\7\3")
-        buf.write("\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\7\bF\n\b\f\b\16\bI\13\b")
-        buf.write("\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\3\3\2\22\22\2M\2\20")
-        buf.write("\3\2\2\2\4\27\3\2\2\2\6%\3\2\2\2\b\60\3\2\2\2\n\64\3\2")
-        buf.write("\2\2\f;\3\2\2\2\16A\3\2\2\2\20\21\7\f\2\2\21\23\7\3\2")
-        buf.write("\2\22\24\5\4\3\2\23\22\3\2\2\2\23\24\3\2\2\2\24\25\3\2")
-        buf.write("\2\2\25\26\7\4\2\2\26\3\3\2\2\2\27\30\7\r\2\2\30\32\7")
-        buf.write("\5\2\2\31\33\5\6\4\2\32\31\3\2\2\2\32\33\3\2\2\2\33\34")
-        buf.write("\3\2\2\2\34\36\7\3\2\2\35\37\5\b\5\2\36\35\3\2\2\2\36")
-        buf.write("\37\3\2\2\2\37!\3\2\2\2 \"\5\16\b\2! \3\2\2\2!\"\3\2\2")
-        buf.write("\2\"#\3\2\2\2#$\7\4\2\2$\5\3\2\2\2%&\7\17\2\2&*\7\3\2")
-        buf.write("\2\')\5\f\7\2(\'\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2\2\2")
-        buf.write("+-\3\2\2\2,*\3\2\2\2-.\7\4\2\2.\7\3\2\2\2/\61\5\n\6\2")
-        buf.write("\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2")
-        buf.write("\63\t\3\2\2\2\648\7\20\2\2\65\67\n\2\2\2\66\65\3\2\2\2")
-        buf.write("\67:\3\2\2\28\66\3\2\2\289\3\2\2\29\13\3\2\2\2:8\3\2\2")
-        buf.write("\2;<\7\21\2\2<=\7\6\2\2=>\7\7\2\2>?\7\21\2\2?@\7\7\2\2")
-        buf.write("@\r\3\2\2\2AB\7\r\2\2BC\7\b\2\2CG\7\3\2\2DF\7\t\2\2ED")
-        buf.write("\3\2\2\2FI\3\2\2\2GE\3\2\2\2GH\3\2\2\2HJ\3\2\2\2IG\3\2")
-        buf.write("\2\2JK\7\4\2\2K\17\3\2\2\2\n\23\32\36!*\628G")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17")
+        buf.write("=\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2")
+        buf.write("\3\2\3\2\5\2\22\n\2\3\2\3\2\3\3\3\3\3\3\5\3\31\n\3\3\3")
+        buf.write("\3\3\6\3\35\n\3\r\3\16\3\36\3\3\3\3\3\4\3\4\3\4\7\4&\n")
+        buf.write("\4\f\4\16\4)\13\4\3\4\3\4\3\5\6\5.\n\5\r\5\16\5/\3\6\3")
+        buf.write("\6\7\6\64\n\6\f\6\16\6\67\13\6\3\7\3\7\3\7\3\7\3\7\2\2")
+        buf.write("\b\2\4\6\b\n\f\2\3\3\2\r\r\2<\2\16\3\2\2\2\4\25\3\2\2")
+        buf.write("\2\6\"\3\2\2\2\b-\3\2\2\2\n\61\3\2\2\2\f8\3\2\2\2\16\17")
+        buf.write("\7\t\2\2\17\21\7\13\2\2\20\22\5\4\3\2\21\20\3\2\2\2\21")
+        buf.write("\22\3\2\2\2\22\23\3\2\2\2\23\24\7\f\2\2\24\3\3\2\2\2\25")
+        buf.write("\26\7\t\2\2\26\30\7\5\2\2\27\31\5\6\4\2\30\27\3\2\2\2")
+        buf.write("\30\31\3\2\2\2\31\32\3\2\2\2\32\34\7\13\2\2\33\35\5\n")
+        buf.write("\6\2\34\33\3\2\2\2\35\36\3\2\2\2\36\34\3\2\2\2\36\37\3")
+        buf.write("\2\2\2\37 \3\2\2\2 !\7\f\2\2!\5\3\2\2\2\"#\7\t\2\2#\'")
+        buf.write("\7\13\2\2$&\5\f\7\2%$\3\2\2\2&)\3\2\2\2\'%\3\2\2\2\'(")
+        buf.write("\3\2\2\2(*\3\2\2\2)\'\3\2\2\2*+\7\f\2\2+\7\3\2\2\2,.\5")
+        buf.write("\n\6\2-,\3\2\2\2./\3\2\2\2/-\3\2\2\2/\60\3\2\2\2\60\t")
+        buf.write("\3\2\2\2\61\65\7\t\2\2\62\64\n\2\2\2\63\62\3\2\2\2\64")
+        buf.write("\67\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\66\13\3\2\2\2")
+        buf.write("\67\65\3\2\2\289\7\n\2\29:\7\3\2\2:;\7\4\2\2;\r\3\2\2")
+        buf.write("\2\b\21\30\36\'/\65")
         return buf.getvalue()
 
 
@@ -49,15 +45,13 @@ class LilypondParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'{'", "'}'", "'Staff'", "'='", "'\"'", 
-                     "'Voice'", "<INVALID>", "<INVALID>", "<INVALID>", "'\\score'", 
-                     "'\\new'", "'\\layout'", "'\\with'", "<INVALID>", "<INVALID>", 
-                     "'\\'" ]
+    literalNames = [ "<INVALID>", "'='", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "'{'", "'}'", "'\\'" ]
 
-    symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "NOTE", "OCTAVE", 
-                      "DURATION", "SCORE_KW", "NEW_KW", "LAYOUT_KW", "WITH_KW", 
-                      "KW", "NAME", "SLASH", "WS", "ALL" ]
+    symbolicNames = [ "<INVALID>", "<INVALID>", "STRING", "OBJ_TYPE", "NOTE", 
+                      "OCTAVE", "DURATION", "KW", "NAME", "LBRACE", "RBRACE", 
+                      "SLASH", "WS", "ALL" ]
 
     RULE_score = 0
     RULE_staff = 1
@@ -65,30 +59,24 @@ class LilypondParser ( Parser ):
     RULE_prefix_block = 3
     RULE_line = 4
     RULE_assignment = 5
-    RULE_voice = 6
 
     ruleNames =  [ "score", "staff", "with_block", "prefix_block", "line", 
-                   "assignment", "voice" ]
+                   "assignment" ]
 
     EOF = Token.EOF
     T__0=1
-    T__1=2
-    T__2=3
-    T__3=4
-    T__4=5
-    T__5=6
-    NOTE=7
-    OCTAVE=8
-    DURATION=9
-    SCORE_KW=10
-    NEW_KW=11
-    LAYOUT_KW=12
-    WITH_KW=13
-    KW=14
-    NAME=15
-    SLASH=16
-    WS=17
-    ALL=18
+    STRING=2
+    OBJ_TYPE=3
+    NOTE=4
+    OCTAVE=5
+    DURATION=6
+    KW=7
+    NAME=8
+    LBRACE=9
+    RBRACE=10
+    SLASH=11
+    WS=12
+    ALL=13
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -105,8 +93,14 @@ class LilypondParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def SCORE_KW(self):
-            return self.getToken(LilypondParser.SCORE_KW, 0)
+        def KW(self):
+            return self.getToken(LilypondParser.KW, 0)
+
+        def LBRACE(self):
+            return self.getToken(LilypondParser.LBRACE, 0)
+
+        def RBRACE(self):
+            return self.getToken(LilypondParser.RBRACE, 0)
 
         def staff(self):
             return self.getTypedRuleContext(LilypondParser.StaffContext,0)
@@ -133,20 +127,20 @@ class LilypondParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 14
-            self.match(LilypondParser.SCORE_KW)
+            self.state = 12
+            self.match(LilypondParser.KW)
+            self.state = 13
+            self.match(LilypondParser.LBRACE)
             self.state = 15
-            self.match(LilypondParser.T__0)
-            self.state = 17
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==LilypondParser.NEW_KW:
-                self.state = 16
+            if _la==LilypondParser.KW:
+                self.state = 14
                 self.staff()
 
 
-            self.state = 19
-            self.match(LilypondParser.T__1)
+            self.state = 17
+            self.match(LilypondParser.RBRACE)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -162,19 +156,27 @@ class LilypondParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def NEW_KW(self):
-            return self.getToken(LilypondParser.NEW_KW, 0)
+        def KW(self):
+            return self.getToken(LilypondParser.KW, 0)
+
+        def OBJ_TYPE(self):
+            return self.getToken(LilypondParser.OBJ_TYPE, 0)
+
+        def LBRACE(self):
+            return self.getToken(LilypondParser.LBRACE, 0)
+
+        def RBRACE(self):
+            return self.getToken(LilypondParser.RBRACE, 0)
 
         def with_block(self):
             return self.getTypedRuleContext(LilypondParser.With_blockContext,0)
 
 
-        def prefix_block(self):
-            return self.getTypedRuleContext(LilypondParser.Prefix_blockContext,0)
-
-
-        def voice(self):
-            return self.getTypedRuleContext(LilypondParser.VoiceContext,0)
+        def line(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(LilypondParser.LineContext)
+            else:
+                return self.getTypedRuleContext(LilypondParser.LineContext,i)
 
 
         def getRuleIndex(self):
@@ -198,38 +200,34 @@ class LilypondParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 21
-            self.match(LilypondParser.NEW_KW)
+            self.state = 19
+            self.match(LilypondParser.KW)
+            self.state = 20
+            self.match(LilypondParser.OBJ_TYPE)
             self.state = 22
-            self.match(LilypondParser.T__2)
-            self.state = 24
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==LilypondParser.WITH_KW:
-                self.state = 23
-                self.with_block()
-
-
-            self.state = 26
-            self.match(LilypondParser.T__0)
-            self.state = 28
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==LilypondParser.KW:
-                self.state = 27
-                self.prefix_block()
+                self.state = 21
+                self.with_block()
 
 
-            self.state = 31
+            self.state = 24
+            self.match(LilypondParser.LBRACE)
+            self.state = 26 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==LilypondParser.NEW_KW:
-                self.state = 30
-                self.voice()
+            while True:
+                self.state = 25
+                self.line()
+                self.state = 28 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if not (_la==LilypondParser.KW):
+                    break
 
-
-            self.state = 33
-            self.match(LilypondParser.T__1)
+            self.state = 30
+            self.match(LilypondParser.RBRACE)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -245,8 +243,14 @@ class LilypondParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def WITH_KW(self):
-            return self.getToken(LilypondParser.WITH_KW, 0)
+        def KW(self):
+            return self.getToken(LilypondParser.KW, 0)
+
+        def LBRACE(self):
+            return self.getToken(LilypondParser.LBRACE, 0)
+
+        def RBRACE(self):
+            return self.getToken(LilypondParser.RBRACE, 0)
 
         def assignment(self, i:int=None):
             if i is None:
@@ -276,22 +280,22 @@ class LilypondParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 35
-            self.match(LilypondParser.WITH_KW)
-            self.state = 36
-            self.match(LilypondParser.T__0)
-            self.state = 40
+            self.state = 32
+            self.match(LilypondParser.KW)
+            self.state = 33
+            self.match(LilypondParser.LBRACE)
+            self.state = 37
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==LilypondParser.NAME:
-                self.state = 37
+                self.state = 34
                 self.assignment()
-                self.state = 42
+                self.state = 39
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 43
-            self.match(LilypondParser.T__1)
+            self.state = 40
+            self.match(LilypondParser.RBRACE)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -335,13 +339,13 @@ class LilypondParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 46 
+            self.state = 43 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 45
+                self.state = 42
                 self.line()
-                self.state = 48 
+                self.state = 45 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not (_la==LilypondParser.KW):
@@ -392,23 +396,23 @@ class LilypondParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 50
+            self.state = 47
             self.match(LilypondParser.KW)
-            self.state = 54
+            self.state = 51
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,5,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 51
+                    self.state = 48
                     _la = self._input.LA(1)
                     if _la <= 0 or _la==LilypondParser.SLASH:
                         self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
                         self.consume() 
-                self.state = 56
+                self.state = 53
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,5,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -425,11 +429,11 @@ class LilypondParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def NAME(self, i:int=None):
-            if i is None:
-                return self.getTokens(LilypondParser.NAME)
-            else:
-                return self.getToken(LilypondParser.NAME, i)
+        def NAME(self):
+            return self.getToken(LilypondParser.NAME, 0)
+
+        def STRING(self):
+            return self.getToken(LilypondParser.STRING, 0)
 
         def getRuleIndex(self):
             return LilypondParser.RULE_assignment
@@ -451,79 +455,12 @@ class LilypondParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_assignment)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 57
+            self.state = 54
             self.match(LilypondParser.NAME)
-            self.state = 58
-            self.match(LilypondParser.T__3)
-            self.state = 59
-            self.match(LilypondParser.T__4)
-            self.state = 60
-            self.match(LilypondParser.NAME)
-            self.state = 61
-            self.match(LilypondParser.T__4)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class VoiceContext(ParserRuleContext):
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def NEW_KW(self):
-            return self.getToken(LilypondParser.NEW_KW, 0)
-
-        def NOTE(self, i:int=None):
-            if i is None:
-                return self.getTokens(LilypondParser.NOTE)
-            else:
-                return self.getToken(LilypondParser.NOTE, i)
-
-        def getRuleIndex(self):
-            return LilypondParser.RULE_voice
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVoice" ):
-                listener.enterVoice(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVoice" ):
-                listener.exitVoice(self)
-
-
-
-
-    def voice(self):
-
-        localctx = LilypondParser.VoiceContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_voice)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 63
-            self.match(LilypondParser.NEW_KW)
-            self.state = 64
-            self.match(LilypondParser.T__5)
-            self.state = 65
+            self.state = 55
             self.match(LilypondParser.T__0)
-            self.state = 69
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            while _la==LilypondParser.NOTE:
-                self.state = 66
-                self.match(LilypondParser.NOTE)
-                self.state = 71
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-
-            self.state = 72
-            self.match(LilypondParser.T__1)
+            self.state = 56
+            self.match(LilypondParser.STRING)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
