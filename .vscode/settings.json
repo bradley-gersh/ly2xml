@@ -1,6 +1,7 @@
 {
   "antlr4.generation": {
     "mode": "internal",
+    "language": "Python3",
     "listeners": false,
     "visitors": false
   }
