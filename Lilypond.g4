@@ -18,7 +18,7 @@ with_block       : WITH_KW LBRACE assignment* RBRACE;
 voice_block:
     VOICE_CTX LBRACE (note_block | polyphony_block)* RBRACE;
 note_block     : ( relative_block | note_cmd | NOTE)+;
-relative_block : RELATIVE_KWD NOTE LBRACE note_block RBRACE;
+relative_block : RELATIVE_KW NOTE LBRACE note_block RBRACE;
 polyphony_block:
     '<<' LBRACE note_block RBRACE '\\\\' LBRACE note_block RBRACE '>>';
 
