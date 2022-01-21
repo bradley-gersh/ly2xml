@@ -11,7 +11,7 @@ At the command line, enter
 python ly2musicxml.py /path/to/FILE.ly
 ```
 
-where `FILE.ly` is your Lilypond source to convert to MusicXML.
+where `FILE.ly` is your Lilypond source to convert to MusicXML. A sample file, `sample.ly`, is included in the repository as a demonstration.
 
 ## Supported Commands
 
