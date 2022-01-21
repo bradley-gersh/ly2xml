@@ -43,7 +43,7 @@ clef_cmd    : CLEF_KW ID;
 fermata_cmd : FERMATA_KW;
 key_cmd     : KEY_KW NOTE MODE_KW;
 mark_cmd    : MARK_KW (scheme_cmd | DEFAULT_KW)?;
-tempo_cmd   : TEMPO_KW STRING TEMPO_EQN?;
+tempo_cmd   : TEMPO_KW STRING INTEGER '=' INTEGER;
 time_cmd    : TIME_KW TIME_SIG;
 version_cmd : VERSION_KW VERSION_STR;
 assignment  : ID '=' (STRING | scheme_cmd);
@@ -80,10 +80,9 @@ TIME_KW     : '\\time';
 KW : SLASH ID_CHAR+;
 
 // Note entry
-NOTE      : ID_CHAR OCTAVE? DURATION?;
+NOTE      : ID_CHAR OCTAVE? (INTEGER | INTEGER '.')?;
 TIME_SIG  : INTEGER '/' INTEGER;
 TEMPO_EQN : INTEGER '=' INTEGER;
-DURATION  : INTEGER '.'?;
 OCTAVE    : '\''+ | ','+;
 BARLINE   : '"' BAR_CHAR+ '"';
 

@@ -64,5 +64,5 @@ Instr.: vn + vc
 		}
   }
 	>>
-
+}
 \version "2.10.0"  % necessary for upgrading to future LilyPond versions.
