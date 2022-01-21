@@ -1,7 +1,6 @@
 grammar Lilypond;
 
 // Multi-line blocks
-useless_rule : header_block;
 score_file: (
         header_block
         | score_block
@@ -53,7 +52,6 @@ STAFFGROUP_CTX : '\\new StaffGroup';
 VOICE_CTX      : '\\new Voice';
 
 // Layout Commands
-BOOK_KW     : '\\book';
 HEADER_KW   : '\\header';
 LAYOUT_KW   : '\\layout';
 SCORE_KW    : '\\score';
