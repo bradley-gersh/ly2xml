@@ -26,6 +26,7 @@ Instr.: vn + vc
 
 		\tempo "Mesto" 4 = 100
 		\relative c''{
+		\key c \minor
 		\time 3/4 c4 c c\fermata
 		\tempo "Allegretto"
 		r b b b b b b2.\fermata

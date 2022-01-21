@@ -27,7 +27,6 @@ note_block: (relative_block | note_cmd | polyphony_block | NOTE)+;
 relative_block : RELATIVE_KW NOTE LBRACE note_block RBRACE;
 polyphony_block:
     '<<' LBRACE note_block RBRACE '\\\\' LBRACE note_block RBRACE '>>';
-scheme_cmd : SCHEME_GP | SCHEME_ATOM;
 
 // One-line commands
 note_cmd:
@@ -43,6 +42,7 @@ clef_cmd    : CLEF_KW ID;
 fermata_cmd : FERMATA_KW;
 key_cmd     : KEY_KW NOTE MODE_KW;
 mark_cmd    : MARK_KW (scheme_cmd | DEFAULT_KW)?;
+scheme_cmd  : SCHEME_GP | SCHEME_ATOM;
 tempo_cmd   : TEMPO_KW STRING (INTEGER '=' INTEGER)?;
 time_cmd    : TIME_KW TIME_SIG;
 version_cmd : VERSION_KW VERSION_STR;
