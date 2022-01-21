@@ -21,7 +21,7 @@ the following commands should parse correctly:
 - Organizational commands
 
   ```lilypond
-  \book, \header, \layout, \score, \version
+  \header, \layout, \score, \version
   \new [Staff, StaffGroup, Voice]
   \with
   #(...) % Scheme commands
@@ -35,8 +35,12 @@ the following commands should parse correctly:
   \bar, \clef, \default, \key, \mark, \major, \minor, \relative, \tempo, \time
   ```
 
-## Attribution
+## Credits
 
-This implementation was developed by Bradley Gersh and released under the MIT License. The parser was generated using Terence Parr and Sam Harwell's [ANTLR4](https://www.antlr.org/).
+This implementation was developed by Bradley Gersh and released under the MIT
+License. Development is ongoing, but if you have suggestions or bug reports,
+please feel free to let me know!
 
-Development is ongoing, but if you have suggestions or bug reports, please feel free to let me know!
+The parser was generated using Terence Parr and Sam Harwell's [ANTLR4](https://www.antlr.org/).
+My model for the AST code is based on [Strumenta's](https://strumenta.com/) course,
+["Using ANTLR Like a Professional," Professional Edition](https://tomassetti.me/antlr-course-2-edition/).

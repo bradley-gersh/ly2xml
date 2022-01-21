@@ -1,14 +1,13 @@
 grammar Lilypond;
 
 // Multi-line blocks
+useless_rule : header_block;
 score_file: (
         header_block
-        | book_block
         | score_block
         | version_cmd
         | scheme_cmd
     )+;
-book_block   : BOOK_KW LBRACE score_block RBRACE;
 header_block : HEADER_KW LBRACE assignment* RBRACE;
 score_block:
     SCORE_KW LBRACE (staff_block | staffgroup_block)* RBRACE;
