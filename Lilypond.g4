@@ -23,7 +23,7 @@ prefix_block : time_cmd;
 with_block   : WITH_KW LBRACE assignment* RBRACE;
 voice_block:
     VOICE_CTX LBRACE (note_block | polyphony_block)* RBRACE;
-note_block     : ( relative_block | note_cmd | NOTE)+;
+note_block: (relative_block | note_cmd | polyphony_block | NOTE)+;
 relative_block : RELATIVE_KW NOTE LBRACE note_block RBRACE;
 polyphony_block:
     '<<' LBRACE note_block RBRACE '\\\\' LBRACE note_block RBRACE '>>';
@@ -43,7 +43,7 @@ clef_cmd    : CLEF_KW ID;
 fermata_cmd : FERMATA_KW;
 key_cmd     : KEY_KW NOTE MODE_KW;
 mark_cmd    : MARK_KW (scheme_cmd | DEFAULT_KW)?;
-tempo_cmd   : TEMPO_KW STRING INTEGER '=' INTEGER;
+tempo_cmd   : TEMPO_KW STRING (INTEGER '=' INTEGER)?;
 time_cmd    : TIME_KW TIME_SIG;
 version_cmd : VERSION_KW VERSION_STR;
 assignment  : ID '=' (STRING | scheme_cmd);
@@ -80,11 +80,10 @@ TIME_KW     : '\\time';
 KW : SLASH ID_CHAR+;
 
 // Note entry
-NOTE      : ID_CHAR OCTAVE? (INTEGER | INTEGER '.')?;
-TIME_SIG  : INTEGER '/' INTEGER;
-TEMPO_EQN : INTEGER '=' INTEGER;
-OCTAVE    : '\''+ | ','+;
-BARLINE   : '"' BAR_CHAR+ '"';
+NOTE     : ID_CHAR OCTAVE? (INTEGER | INTEGER '.')?;
+TIME_SIG : INTEGER '/' INTEGER;
+OCTAVE   : '\''+ | ','+;
+BARLINE  : '"' BAR_CHAR+ '"';
 
 ID                   : (ID_CHAR | '.' | '/')+;
 STRING               : '"' STRING_CHAR+ '"';
