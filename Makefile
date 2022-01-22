@@ -5,7 +5,7 @@
 # If this is not the case for you, see the ANTLR4 installation
 # instructions at https://www.antlr.org/.
 #
-ANTLR4 = java -jar ~/Code/lib/java/antlr-4.9.3-complete.jar
+ANTLR4 := java -jar ~/Code/lib/java/antlr-4.9.3-complete.jar
 
 #
 # Rebuild the parser in Python3 (default) after edits to the
@@ -29,5 +29,5 @@ clean:
 	rm -f *.interp
 	rm -f *.tokens
 	rm -f LilypondParser*.*
-	rm -f LilypondLexer*t .*
-	rm -rf .antlr/
+	rm -f LilypondLexer*.*
+	rm -rf \.antlr/

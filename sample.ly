@@ -51,13 +51,13 @@ Instr.: vn + vc
 		\relative c{
 		\time 3/4 c4 c c\fermata
 		\tempo "Allegretto"
-		r b b b b b b2.\fermata
+		r b b b b\mark \default b b2.\fermata
 		\tempo "Tempo II"
-    f'4 f f f f f f f r\fermata
+    f'4 f f f f a, f f r\fermata
 		\tempo "Tempo I"
 		r4
 		<<
-			{ g g g g g g \tempo "poco string." f f f f f } \\
+			{ g g <g e> g g g \tempo "poco string." f f f f f } \\
 			    {e e e e e <e b> d d d d d }
 		>>
 		\tempo "Tempo I"
