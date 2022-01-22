@@ -20,7 +20,7 @@ python:
 #
 java:
 	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor Lilypond.g4
-	javac Lilypond*.class
+	javac Lilypond*.java
 
 #
 # Remove the files built by ANTLR4.
@@ -28,6 +28,6 @@ java:
 clean:
 	rm -f *.interp
 	rm -f *.tokens
-	rm -f LilypondParser.*
-	rm -f LilypondLexer.*
+	rm -f LilypondParser*.*
+	rm -f LilypondLexer*.*
 	rm -rf .antlr/

@@ -35,6 +35,8 @@ the following commands should parse correctly:
   \bar, \clef, \default, \key, \mark, \major, \minor, \relative, \tempo, \time
   ```
 
+  Polyphony blocks (delimited by `<< >>`) and chords (delimited by `< >`) are also possible.
+
 ## Credits
 
 This implementation was developed by Bradley Gersh and released under the MIT

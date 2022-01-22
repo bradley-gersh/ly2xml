@@ -58,7 +58,7 @@ Instr.: vn + vc
 		r4
 		<<
 			{ g g g g g g \tempo "poco string." f f f f f } \\
-			    {e e e e e e d d d d d }
+			    {e e e e e <e b> d d d d d }
 		>>
 		\tempo "Tempo I"
 		d2. d c c\fermata \bar "||"

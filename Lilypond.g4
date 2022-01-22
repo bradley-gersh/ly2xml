@@ -10,21 +10,29 @@ score_file: (
 header_block : HEADER_KW LBRACE assignment* RBRACE;
 score_block:
     SCORE_KW LBRACE (staff_block | staffgroup_block)* RBRACE;
-staffgroup_block : STAFFGROUP_CTX '<<' staff_block* '>>';
+staffgroup_block:
+    STAFFGROUP_CTX LANGLE LANGLE staff_block* RANGLE RANGLE;
 staff_block:
     STAFF_CTX with_block? LBRACE prefix_block? (
         note_block
         | polyphony_block
         | voice_block
     )+ RBRACE;
-prefix_block : time_cmd;
+prefix_block : (time_cmd? key_cmd) | time_cmd;
 with_block   : WITH_KW LBRACE assignment* RBRACE;
 voice_block:
     VOICE_CTX LBRACE (note_block | polyphony_block)* RBRACE;
-note_block: (relative_block | note_cmd | polyphony_block | NOTE)+;
+note_block: (
+        relative_block
+        | note_cmd
+        | polyphony_block
+        | chord
+        | NOTE
+    )+;
 relative_block : RELATIVE_KW NOTE LBRACE note_block RBRACE;
 polyphony_block:
-    '<<' LBRACE note_block RBRACE '\\\\' LBRACE note_block RBRACE '>>';
+    LANGLE LANGLE LBRACE note_block RBRACE '\\\\' LBRACE note_block RBRACE RANGLE RANGLE;
+chord : LANGLE NOTE+ RANGLE (INTEGER | INTEGER '.')?;
 
 // One-line commands
 note_cmd:
@@ -88,6 +96,8 @@ VERSION_STR          : '"' (INTEGER | '.')+ '"';
 HASH                 : '#';
 LBRACE               : '{';
 RBRACE               : '}';
+LANGLE               : '<';
+RANGLE               : '>';
 SLASH                : '\\';
 INTEGER              : DIGIT+;
 fragment STRING_CHAR : [a-zA-Z .,];
