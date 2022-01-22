@@ -12,22 +12,24 @@ ANTLR4 := java -jar ~/Code/lib/java/antlr-4.9.3-complete.jar
 # grammar file Lilypond.g4
 #
 python:
-	$(ANTLR4) -Dlanguage=Python3 -no-listener -no-visitor Lilypond.g4
+	$(ANTLR4) -Dlanguage=Python3 -no-listener -no-visitor LilypondLexer.g4 LilypondParser.g4
 
 #
 # Rebuild the parser in Java after edits to the grammar file
 # Lilypond.g4. Requires `javac`.
 #
 java:
-	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor Lilypond.g4
+	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor LilypondLexer.g4 LilypondParser.g4
 	javac Lilypond*.java
 
 #
 # Remove the files built by ANTLR4.
 #
 clean:
-	rm -f *.interp
-	rm -f *.tokens
-	rm -f LilypondParser*.*
-	rm -f LilypondLexer*.*
-	rm -rf \.antlr/
+	$(RM) *.interp
+	$(RM) *.tokens
+	$(RM) *.java
+	$(RM) *.class
+	$(RM) LilypondParser.py
+	$(RM) LilypondLexer.py
+	$(RM) -r \.antlr/
