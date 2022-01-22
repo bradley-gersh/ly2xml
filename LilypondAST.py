@@ -2,14 +2,26 @@ from LilypondParser import LilypondParser as LP
 from LilypondDataclasses import *
 
 def ScoreFileToAst(self):
-    pass
+    return ScoreFile(
+        Header=self.header_block().toAst(),
+        SchemeCmds=[scheme_cmd.toAst() for scheme_cmd in self.scheme_cmds()],
+        Score=self.score_block().toAst(),
+        Version=self.version_cmd().toAst()
+    )
 
 LP.Score_fileContext.toAst = ScoreFileToAst
 
 def HeaderBlockToAst(self):
-    pass
+    return Header(
+        Metadata=[Metadata(Field=line.ID(), Value=line.STRING()) for line in self.assignment()]
+    )
 
 LP.Header_blockContext.toAst = HeaderBlockToAst
+
+def AssignmentToAst(self):
+    pass
+
+LP.AssignmentContext.toAst = AssignmentToAst
 
 def ScoreBlockToAst(self):
     pass
