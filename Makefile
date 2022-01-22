@@ -29,5 +29,5 @@ clean:
 	rm -f *.interp
 	rm -f *.tokens
 	rm -f LilypondParser*.*
-	rm -f LilypondLexer*.*
+	rm -f LilypondLexer*t .*
 	rm -rf .antlr/
