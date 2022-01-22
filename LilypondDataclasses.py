@@ -207,6 +207,6 @@ class Score(Group):
 @dataclass
 class ScoreFile(Group):
     Header: Optional[Header]
-    SchemeCmds: SchemeCmd
+    SchemeCmds: Optional[SchemeCmd]
     Score: Score
     Version: Version
