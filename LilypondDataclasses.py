@@ -27,8 +27,8 @@ class CommandName(Enum):
 
 @dataclass
 class Command(Node):
-    command: CommandName
-    argument: str
+    Command: CommandName
+    Argument: str
 
 @dataclass
 class MetadataField(Enum):
@@ -38,24 +38,24 @@ class MetadataField(Enum):
 
 @dataclass
 class Metadata(Node):
-    field: MetadataField
-    value: str
+    Field: MetadataField
+    Value: str
 
 @dataclass
 class Header(Group):
-    metadata: Optional[List(Metadata)]
+    Metadata: Optional[List(Metadata)]
 
 @dataclass
 class SchemeCmd(Node):
-    command: str
+    Command: str
 
 @dataclass
 class Version(Node):
-    lilypond_ver: str
+    LilypondVer: str
 
 @dataclass
 class WithCmd(Group):
-    commands: List(Command)
+    Commands: List(Command)
 
 
 @dataclass
@@ -149,18 +149,18 @@ class Mode(Enum):
 
 @dataclass
 class Time(Node):
-    numerator: int
-    denominator: NoteLength
+    Numerator: int
+    Denominator: NoteLength
 
 @dataclass
 class Key(Node):
-    note: PitchClass
-    mode: Mode
+    Note: PitchClass
+    Mode: Mode
 
 @dataclass
 class Pitch(Node):
-    pitch_class: PitchClass
-    octave: Number
+    PitchClass: PitchClass
+    Octave: Number
 
 @dataclass
 class Extra(Enum):
@@ -174,39 +174,39 @@ class Extra(Enum):
 
 @dataclass
 class Chord(Node):
-    pitch: Pitch
-    length: NoteLength
-    extras: Optional[List(Extra)]
+    Pitch: Pitch
+    Length: NoteLength
+    Extras: Optional[List(Extra)]
 
 @dataclass
 class Tempo(Node):
-    desc: str
-    unit = NoteLength
-    per_min = int
+    Desc: str
+    Unit = NoteLength
+    PerMin = int
 
 @dataclass
 class NoteGroup(Group):
-    time: Optional[Time]
-    key: Optional[Key]
-    tempo: Optional[Tempo]
-    notes = List(Chord)
+    Time: Optional[Time]
+    Key: Optional[Key]
+    Tempo: Optional[Tempo]
+    Notes = List(Chord)
 
 @dataclass
 class Staff(Group):
-    with_cmd: Optional[WithCmd]
-    notes: NoteGroup
+    WithCmd: Optional[WithCmd]
+    Notes: NoteGroup
 
 @dataclass
 class StaffGroup(Group):
-    staves: List(Staff)
+    Staves: List(Staff)
 
 @dataclass
 class Score(Group):
-    staff_groups: List(StaffGroup)
+    StaffGroups: List(StaffGroup)
 
 @dataclass
-class Score_File(Group):
-    header: Optional[Header]
-    scheme_cmds: SchemeCmd
-    score: Score
-    version: Version
+class ScoreFile(Group):
+    Header: Optional[Header]
+    SchemeCmds: SchemeCmd
+    Score: Score
+    Version: Version
