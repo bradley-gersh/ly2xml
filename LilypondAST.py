@@ -13,6 +13,8 @@ LP.Score_fileContext.toAst = ScoreFileToAst
 
 def HeaderBlockToAst(self):
     return Header(
+        # TODO: this does not handle the case where Value is
+        # a scheme_cmd
         Metadata=[Metadata(Field=line.ID(), Value=line.STRING()) for line in self.assignment()]
     )
 
@@ -24,17 +26,21 @@ def AssignmentToAst(self):
 LP.AssignmentContext.toAst = AssignmentToAst
 
 def ScoreBlockToAst(self):
-    pass
+    return Score(StaffGroups=[staffgroup.toAst() for staffgroup in self.staffgroup_block()])
 
 LP.Score_blockContext.toAst = ScoreBlockToAst
 
 def StaffGroupBlockToAst(self):
-    pass
+    return StaffGroup(Staves=[staff.toAst() for staff in self.staff_block()])
 
 LP.Staffgroup_blockContext.toAst = StaffGroupBlockToAst
 
 def StaffBlockToAst(self):
-    pass
+    return Staff(
+        WithCmd=self.with_block().toAst(),
+        Prefix=self.prefix_block().toAst(),
+        Notes=self.note_block().toAst()
+    )
 
 LP.Staff_blockContext.toAst = StaffBlockToAst
 
@@ -104,21 +110,28 @@ def MarkCmdToAst(self):
 LP.Mark_cmdContext = MarkCmdToAst
 
 def SchemeCmdToAst(self):
-    pass
+    return SchemeCmd(Command=(self.SCHEME_GP() if self.SCHEME_GP() is not None else self.SCHEME_ATOM()))
 
 LP.Scheme_cmdContext = SchemeCmdToAst
 
 def TempoCmdToAst(self):
-    pass
+    return Tempo(
+        Desc=self.STRING(),
+        Unit=self.INTEGER()[0],
+        PerMin=self.INTEGER()[1]
+    )
 
 LP.Tempo_cmdContext = TempoCmdToAst
 
 def TimeCmdToAst(self):
-    pass
+    return Time(
+        Numerator=self.TIME_SIG().INTEGER()[0],
+        Denominator=self.TIME_SIG().INTEGER()[1]
+    )
 
 LP.Time_cmdContext = TimeCmdToAst
 
 def VersionCmdToAst(self):
-    pass
+    return Version(LilypondVer=self.STRING())
 
 LP.Version_cmdContext = VersionCmdToAst

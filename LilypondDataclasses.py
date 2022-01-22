@@ -150,7 +150,7 @@ class Mode(Enum):
 @dataclass
 class Time(Node):
     Numerator: int
-    Denominator: NoteLength
+    Denominator: int
 
 @dataclass
 class Key(Node):
@@ -181,7 +181,7 @@ class Chord(Node):
 @dataclass
 class Tempo(Node):
     Desc: str
-    Unit = NoteLength
+    Unit = int
     PerMin = int
 
 @dataclass
