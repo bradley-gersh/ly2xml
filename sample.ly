@@ -44,11 +44,11 @@ Instr.: vn + vc
 
 	}
 
-	%{ Tuba %}
+	%{ Violoncello %}
 	\new Staff {
 		\clef bass
 
-		\relative c{
+		\relative c,{
 		\time 3/4 c4 c c\fermata
 		\tempo "Allegretto"
 		r b b b b\mark \default b b2.\fermata
