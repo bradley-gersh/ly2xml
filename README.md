@@ -78,5 +78,5 @@ please feel free to let me know!
 
 The parser was generated using Terence Parr and Sam Harwell's
 [ANTLR4](https://www.antlr.org/). My model for the Python code is based on
-[Strumenta's](https://strumenta.com/) course,
+material from [Strumenta's](https://strumenta.com/) course,
 ["Using ANTLR Like a Professional," Professional Edition](https://tomassetti.me/antlr-course-2-edition/).
