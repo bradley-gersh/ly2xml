@@ -23,7 +23,7 @@ python:
 #
 java:
 	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor $(LEXER) $(PARSER)
-	javac lypy/Lilypond*.java
+	javac $(SRC)/Lilypond*.java
 
 #
 # Remove the files built by ANTLR4.
