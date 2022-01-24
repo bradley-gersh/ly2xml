@@ -1,9 +1,4 @@
-import re
-import antlr4 as antlr
-
 from antlr4.error.ErrorListener import ErrorListener
-
-from LilypondParser import LilypondParser
 
 class LilypondErrorListener(ErrorListener):
 

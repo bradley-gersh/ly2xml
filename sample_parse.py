@@ -1,11 +1,8 @@
-from cmath import e
 import sys
 
 import antlr4 as antlr
 
-from LilypondLexer import LilypondLexer
-from LilypondParser import LilypondParser
-from LilypondErrorListener import LilypondErrorListener
+from lypy import LilypondLexer, LilypondParser, LilypondErrorListener
 
 def main(argv):
     # Parse the file passed in from a command line argument

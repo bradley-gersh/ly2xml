@@ -6,20 +6,22 @@
 # instructions at https://www.antlr.org/.
 #
 ANTLR4 := java -jar ~/Code/lib/java/antlr-4.9.3-complete.jar
+LEXER := lypy/LilypondLexer.g4
+PARSER := lypy/LilypondParser.g4
 
 #
 # Rebuild the parser in Python3 (default) after edits to the
 # grammar file Lilypond.g4
 #
 python:
-	$(ANTLR4) -Dlanguage=Python3 -no-listener -no-visitor LilypondLexer.g4 LilypondParser.g4
+	$(ANTLR4) -Dlanguage=Python3 -no-listener -no-visitor ${LEXER} ${PARSER}
 
 #
 # Rebuild the parser in Java after edits to the grammar file
 # Lilypond.g4. Requires `javac`.
 #
 java:
-	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor LilypondLexer.g4 LilypondParser.g4
+	$(ANTLR4) -Dlanguage=Java -no-listener -no-visitor ${LEXER} ${PARSER}
 	javac Lilypond*.java
 
 #
