@@ -21,20 +21,18 @@ staff_block:
         note_block
         | polyphony_block
         | voice_block
-    )+ RBRACE;
+    )+ END_NOTEBLOCK;
 prefix_block : (time_cmd? key_cmd) | time_cmd;
-voice_block  : VOICE_CTX (note_block | polyphony_block)* END_NOTE;
-note_block: (
-        relative_block
-        | note_cmd
-        | polyphony_block
-        | chord
-        | NOTE
-    )+;
-relative_block : RELATIVE_KW NOTE LBRACE note_block END_NOTE;
+voice_block:
+    VOICE_CTX (note_block | polyphony_block)* END_NOTEBLOCK;
+note_block:
+    (relative_block | note_cmd | polyphony_block | chord | NOTE)+;
+relative_block : REL_BLOCK_N note_block END_NOTEBLOCK;
 polyphony_block:
-    POLYPHONY_N note_block END_NOTE NEXT_POLYPHONY_N note_block END_NOTE END_POLYPHONY_N;
-chord : LANGLE_N NOTE+ RANGLE_N (INTEGER | INTEGER DOT)?;
+    START_POLYPHONY_N NEW_NOTEBLOCK_P note_block END_NOTEBLOCK (
+        NEXT_NOTEBLOCK_P NEW_NOTEBLOCK_P note_block END_NOTEBLOCK
+    )* END_POLYPHONY_P;
+chord : LANGLE NOTE+ RANGLE (INTEGER | INTEGER DOT)?;
 
 // One-line commands
 note_cmd:

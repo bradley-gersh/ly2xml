@@ -31,7 +31,7 @@ Instr.: vn + vc
 		\tempo "Allegretto"
 		r b b b b b b2.\fermata
 		\tempo "Tempo II"
-    f'4 f f f f f f f r\fermata
+    f'4 f f fis g gis, a, ais'' r\fermata
 		\tempo "Tempo I"
 		r4
 		<<
@@ -57,8 +57,8 @@ Instr.: vn + vc
 		\tempo "Tempo I"
 		r4
 		<<
-			{ g g <g e> g g g \tempo "poco string." f f f f f } \\
-			    {e e e e e <e b> d d d d d }
+			{ g g <g es> g g g \tempo "poco string." f f f f f } \\
+			    {e e e e e <e beses> d d d d d }
 		>>
 		\tempo "Tempo I"
 		d2. d c c\fermata \bar "||"

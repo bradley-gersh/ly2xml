@@ -4,8 +4,8 @@ lexer grammar LilypondLexer;
 
 // Contexts
 STAFFGROUP_CTX : '\\new StaffGroup';
-STAFF_CTX      : '\\new Staff' WS? LBRACE -> pushMode(NOTE_ENTRY);
-VOICE_CTX      : '\\new Voice' WS? LBRACE -> pushMode(NOTE_ENTRY);
+STAFF_CTX      : '\\new Staff' WS? LBRACE -> pushMode(NOTEBLOCK);
+VOICE_CTX      : '\\new Voice' WS? LBRACE -> pushMode(NOTEBLOCK);
 
 // Layout Commands
 HEADER_KW   : '\\header';
@@ -14,7 +14,7 @@ SCORE_KW    : '\\score';
 WITH_KW     : '\\with';
 VERSION_KW  : '\\version';
 SCHEME_GP   : HASH '(' .*? ')';
-SCHEME_ATOM : HASH ~[(] .*? WS;
+SCHEME_ATOM : HASH ~[(] STRING_CHAR+;
 
 // Special characters (default mode)
 ID          : (ID_CHAR | '.')+;
@@ -31,7 +31,7 @@ BSLASH      : '\\';
 FSLASH      : '/';
 INTEGER     : [0-9]+;
 
-fragment STRING_CHAR : [a-zA-Z .,];
+fragment STRING_CHAR : [a-zA-Z .,-];
 fragment ID_CHAR     : [a-zA-Z];
 
 // Bypassed characters (default mode)
@@ -39,15 +39,15 @@ COMMENT_MULTILINE : '%{' .*? '%}' -> skip;
 COMMENT_INLINE    : '%' .*? WS -> skip;
 WS                : [ \t\r\n]+ -> skip;
 
-// ---- Note-entry mode: For entering pitches ----
-mode NOTE_ENTRY;
+// ---- Noteblock mode: For entering pitches ----
+mode NOTEBLOCK;
 
-// Exiting note-entry mode
-END_NOTE : RBRACE_N -> popMode;
-
-// Nested Voice contexts are allowed
-VOICE_CTX_N:
-    '\\new Voice' WS? LBRACE_N -> pushMode(NOTE_ENTRY);
+// Mode transitions
+END_NOTEBLOCK : RBRACE_N -> popMode;
+VOICE_CTX_N   : '\\new Voice' WS? LBRACE -> pushMode(NOTEBLOCK);
+REL_BLOCK_N:
+    RELATIVE_KW WS? NOTE LBRACE -> pushMode(NOTEBLOCK);
+START_POLYPHONY_N : LANGLE_N LANGLE_N -> pushMode(POLYPHONY);
 
 // Notes
 NOTE     : PITCH ACCIDENTAL* OCTAVE? (INTEGER_N | INTEGER_N '.')?;
@@ -73,20 +73,21 @@ fragment PITCH      : [a-gr];
 fragment ACCIDENTAL : 's' | 'is' | 'es';
 fragment BAR_CHAR   : [|.;![\]];
 
-// Special characters (note-entry mode)
+// Special characters (noteblock mode)
 HASH_N    : '#' -> type(HASH);
-LBRACE_N  : {System.out.println("lbracen");} '{' -> type(LBRACE);
+LBRACE_N  : '{' -> type(LBRACE);
 RBRACE_N  : '}' -> type(RBRACE);
-LANGLE_N  : {System.out.println("langlen");} '<' -> type(LANGLE);
+LANGLE_N  : '<' -> type(LANGLE);
 RANGLE_N  : '>' -> type(RANGLE);
 EQUALS_N  : '=' -> type(EQUALS);
 DOT_N     : '.' -> type(DOT);
 BSLASH_N  : '\\' -> type(BSLASH);
 FSLASH_N  : '/' -> type(FSLASH);
 INTEGER_N : [0-9]+ -> type(INTEGER);
+ID_N      : (ID_CHAR | '.')+ -> type(ID);
 STRING_N  : '"' STRING_CHAR+ '"' -> type(STRING);
 
-// Bypassed characters (note-entry mode)
+// Bypassed characters (noteblock mode)
 COMMENT_MULTILINE_N : '%{' .*? '%}' -> skip;
 COMMENT_INLINE_N    : '%' .*? WS -> skip;
 WS_N                : [ \t\r\n]+ -> skip;
@@ -95,15 +96,16 @@ WS_N                : [ \t\r\n]+ -> skip;
 mode POLYPHONY;
 
 // Mode transitions
-NEXT_NOTEBLOCK_P : FSLASH_P FSLASH_P;
-NEW_NOTEBLOCK_P  : LBRACE_P -> pushMode(NOTE_ENTRY);
+NEXT_NOTEBLOCK_P : BSLASH_P BSLASH_P;
+NEW_NOTEBLOCK_P  : LBRACE_P -> pushMode(NOTEBLOCK);
+VOICE_CTX_P      : '\\new Voice' WS? LBRACE_P -> pushMode(NOTEBLOCK);
 END_POLYPHONY_P  : RANGLE_P RANGLE_P -> popMode;
 
 // Special characters (polyphony mode)
 HASH_P    : '#' -> type(HASH);
-LBRACE_P  : {System.out.println("lbracen");} '{' -> type(LBRACE);
+LBRACE_P  : '{' -> type(LBRACE);
 RBRACE_P  : '}' -> type(RBRACE);
-LANGLE_P  : {System.out.println("langlen");} '<' -> type(LANGLE);
+LANGLE_P  : '<' -> type(LANGLE);
 RANGLE_P  : '>' -> type(RANGLE);
 EQUALS_P  : '=' -> type(EQUALS);
 DOT_P     : '.' -> type(DOT);
