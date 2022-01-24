@@ -1,4 +1,4 @@
-# Generated from LilypondParser.g4 by ANTLR 4.9.3
+# Generated from lypy/LilypondParser.g4 by ANTLR 4.9.3
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
