@@ -24,9 +24,16 @@ staff_block:
     )+ END_NOTEBLOCK;
 prefix_block : (time_cmd? key_cmd) | time_cmd;
 voice_block:
-    VOICE_CTX (note_block | polyphony_block)* END_NOTEBLOCK;
+    (VOICE_CTX | VOICE_CTX_N) (note_block | polyphony_block)* END_NOTEBLOCK;
 note_block:
-    (relative_block | note_cmd | polyphony_block | chord | NOTE)+;
+    (
+        relative_block
+        | note_cmd
+        | polyphony_block
+        | chord
+        | NOTE
+        | voice_block
+    )+;
 relative_block : REL_BLOCK_N note_block END_NOTEBLOCK;
 polyphony_block:
     START_POLYPHONY_N NEW_NOTEBLOCK_P note_block END_NOTEBLOCK (

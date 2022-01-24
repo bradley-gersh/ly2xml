@@ -1,7 +1,7 @@
 # ly2musicxml
 
-This is a small transpiler that converts [Lilypond](https://lilypond.org)
-notation into the [MusicXML](https://www.musicxml.com/for-developers/) format.
+This is a small parser for a subset of [Lilypond](https://lilypond.org), a DSL
+for music notation.
 
 ## Usage
 
@@ -12,7 +12,8 @@ python ly2musicxml.py /path/to/FILE.ly
 ```
 
 where `FILE.ly` is your Lilypond source to convert to MusicXML. A sample file,
-`sample.ly`, is included in the repository as a demonstration.
+`sample.ly`, is included in the repository as a demonstration, along with a PDF
+of the associated music notation.
 
 ## Supported Commands
 
@@ -40,8 +41,7 @@ not yet parsed.
 
   Chords (delimited by `< >`) are also possible. At present, rhythms cannot
   involve tuplets, and repeat signs are not supported. The parser can recognize
-  polyphony blocks (delimited by `<< >>`), but currently only the top line is
-  transpiled into MusicXML.
+  polyphony blocks (delimited by `<< >>`).
 
 ## Credits
 
