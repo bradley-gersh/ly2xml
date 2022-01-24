@@ -1,19 +1,33 @@
-# ly2musicxml
+# LyParse
 
-This is a small parser for a subset of [Lilypond](https://lilypond.org), a DSL
+This is a small Python 3 parser for a subset of [Lilypond](https://lilypond.org), a DSL
 for music notation.
 
 ## Usage
 
-At the command line, enter
+The PyPI package [antlr4-python3-runtime](https://pypi.org/project/antlr4-python3-runtime/)
+is required. If necessary, first install it from the command line:
 
 ```sh
-python ly2musicxml.py /path/to/FILE.ly
+pip install antlr4-python3-runtime
 ```
 
-where `FILE.ly` is your Lilypond source to convert to MusicXML. A sample file,
-`sample.ly`, is included in the repository as a demonstration, along with a PDF
-of the associated music notation.
+At present, the parser yields an (unedited) parse tree that can be used in a
+Python script. The file `sample_parse.py`, which generates the parse tree in
+memory for further manipulation, demonstrates how it can be created in context.
+To apply this sample script to a Lilypond file, enter from the command line:
+
+```sh
+python sample_parse.py path/to/file.ly
+```
+
+replacing `path/to/file.ly` by the appropriate path your Lilypond file. The
+sample script prints a success or failure message indicating if the file has
+been parsed. Note that any reported syntax errors will refer to the names of
+internally defined tokens, which might be slightly cryptic (e.g. `STAFF_CTX`)
+
+A sample Lilypond file, `sample_score.ly`, is also included in the repository,
+along with a PDF of the associated music notation.
 
 ## Supported Commands
 
@@ -30,8 +44,7 @@ the following commands should parse correctly:
   %{ Multiline comments %}
   ```
 
-Note that only three contexts are supported, and `\with` blocks are
-not yet parsed.
+Note that `\with` blocks are not yet parsed for contexts.
 
 - Notation commands
 
@@ -39,9 +52,23 @@ not yet parsed.
   \bar, \clef, \default, \key, \mark, \major, \minor, \relative, \tempo, \time
   ```
 
-  Chords (delimited by `< >`) are also possible. At present, rhythms cannot
-  involve tuplets, and repeat signs are not supported. The parser can recognize
-  polyphony blocks (delimited by `<< >>`).
+  Notes with accidentals and non-tuplet rhythms are possible, as are chords
+  delimited by `< >`. The parser can recognize polyphony blocks (delimited by `<< >>`)
+  using either Voice contexts (`\new Voice`) or the bracket-and-backslash notation.
+
+  For details of Lilypond syntax, see its [documentation](https://lilypond.org/doc/v2.21/Documentation/notation/index),
+  especially the command index in [Appendix D](https://lilypond.org/doc/v2.21/Documentation/notation/lilypond-command-index).
+
+## Modifying the Grammar
+
+A small Makefile is included if you make any modifications to the grammar files
+`*.g4`. If you update the grammar, execute `make python` from the shell to
+regenerate the associated Python files for use in other scripts.
+
+A `make java` command is also included in case you wish to use ANTLR's debug
+tool `grun`, which requires Java classes.
+
+The `make clean` command will clear all Java classes from the directory.
 
 ## Credits
 
@@ -50,6 +77,6 @@ License. Development is ongoing, but if you have suggestions or bug reports,
 please feel free to let me know!
 
 The parser was generated using Terence Parr and Sam Harwell's
-[ANTLR4](https://www.antlr.org/). My model for the AST code is based on
+[ANTLR4](https://www.antlr.org/). My model for the Python code is based on
 [Strumenta's](https://strumenta.com/) course,
 ["Using ANTLR Like a Professional," Professional Edition](https://tomassetti.me/antlr-course-2-edition/).

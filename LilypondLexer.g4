@@ -71,7 +71,7 @@ TIME_KW     : '\\time';
 
 fragment PITCH      : [a-gr];
 fragment ACCIDENTAL : 's' | 'is' | 'es';
-fragment BAR_CHAR   : [|.;![\]];
+fragment BAR_CHAR   : [|.:;![\]];
 
 // Special characters (noteblock mode)
 HASH_N    : '#' -> type(HASH);

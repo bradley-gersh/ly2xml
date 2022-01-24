@@ -30,6 +30,4 @@ clean:
 	$(RM) *.tokens
 	$(RM) *.java
 	$(RM) *.class
-	$(RM) LilypondParser.py
-	$(RM) LilypondLexer.py
 	$(RM) -r \.antlr/
