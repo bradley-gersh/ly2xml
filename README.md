@@ -26,8 +26,16 @@ sample script prints a success or failure message indicating if the file has
 been parsed. Note that any reported syntax errors will refer to the names of
 internally defined tokens, which might be slightly cryptic (e.g. `STAFF_CTX`)
 
-A sample Lilypond file, `sample_score.ly`, is also included in the repository,
-along with a PDF of the associated music notation.
+A sample Lilypond file of not-very-beautiful music, `sample_score.ly`, is also
+included in the repository, along with a PDF of the associated music notation.
+The following command will generate its parse tree:
+
+```sh
+python sample_parse.py sample_score.ly
+```
+
+Feel free to introduce errors into the sample file to see how the parser reacts.
+Note that only the first parse error is reported when encountered.
 
 ## Supported Commands
 
