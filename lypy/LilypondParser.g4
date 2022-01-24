@@ -55,7 +55,8 @@ note_cmd:
     | key_cmd
     | mark_cmd
     | tempo_cmd
-    | time_cmd;
+    | time_cmd
+    | voice_cmd;
 bar_cmd     : BAR_KW BARLINE;
 clef_cmd    : CLEF_KW ID;
 fermata_cmd : FERMATA_KW;
@@ -65,4 +66,5 @@ scheme_cmd  : SCHEME_GP | SCHEME_ATOM;
 tempo_cmd   : TEMPO_KW STRING (INTEGER EQUALS INTEGER)?;
 time_cmd    : TIME_KW TIME_SIG;
 version_cmd : VERSION_KW VERSION_STR;
+voice_cmd   : VOICE_ONE | VOICE_TWO | VOICE_THREE | VOICE_FOUR;
 assignment  : ID EQUALS (STRING | scheme_cmd);

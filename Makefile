@@ -33,4 +33,4 @@ clean:
 	$(RM) $(SRC)/*.tokens
 	$(RM) $(SRC)/*.java
 	$(RM) $(SRC)/*.class
-	$(RM) -r $(SRC)\.antlr/
+	$(RM) -r $(SRC)/\.antlr/

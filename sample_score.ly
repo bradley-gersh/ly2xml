@@ -35,9 +35,9 @@ Instr.: vn + vc
 		\tempo "Tempo I"
 		r4
 		<<
-			\new Voice { g g g g g g \tempo "poco string." f f f f f }
+			\new Voice { \voiceOne g g g g g g \tempo "poco string." f f f f f }
 			\new Voice
-			    {e e e e e e d d d d d }
+			    { \voiceTwo e e e e e e d d d d d }
 		>>
 		\tempo "Tempo I"
 		d2. d c c\fermata \bar "||"

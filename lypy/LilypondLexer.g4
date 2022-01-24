@@ -68,6 +68,10 @@ MODE_MIN    : '\\minor';
 RELATIVE_KW : '\\relative';
 TEMPO_KW    : '\\tempo';
 TIME_KW     : '\\time';
+VOICE_ONE   : '\\voiceOne';
+VOICE_TWO   : '\\voiceTwo';
+VOICE_THREE : '\\voiceThree';
+VOICE_FOUR  : '\\voiceFour';
 
 fragment PITCH      : [a-gr];
 fragment ACCIDENTAL : 's' | 'is' | 'es';
