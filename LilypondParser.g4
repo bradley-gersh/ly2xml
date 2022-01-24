@@ -34,7 +34,7 @@ note_block: (
 relative_block : RELATIVE_KW NOTE LBRACE note_block END_NOTE;
 polyphony_block:
     POLYPHONY_N note_block END_NOTE NEXT_POLYPHONY_N note_block END_NOTE END_POLYPHONY_N;
-chord : LANGLE NOTE+ RANGLE (INTEGER | INTEGER DOT)?;
+chord : LANGLE_N NOTE+ RANGLE_N (INTEGER | INTEGER DOT)?;
 
 // One-line commands
 note_cmd:

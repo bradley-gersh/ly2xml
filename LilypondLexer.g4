@@ -1,6 +1,6 @@
 lexer grammar LilypondLexer;
 
-// Default mode: Lilypond commands
+// ---- Default mode: Lilypond commands ----
 
 // Contexts
 STAFFGROUP_CTX : '\\new StaffGroup';
@@ -16,6 +16,7 @@ VERSION_KW  : '\\version';
 SCHEME_GP   : HASH '(' .*? ')';
 SCHEME_ATOM : HASH ~[(] .*? WS;
 
+// Special characters (default mode)
 ID          : (ID_CHAR | '.')+;
 STRING      : '"' STRING_CHAR+ '"';
 VERSION_STR : '"' (INTEGER | '.')+ '"';
@@ -33,20 +34,28 @@ INTEGER     : [0-9]+;
 fragment STRING_CHAR : [a-zA-Z .,];
 fragment ID_CHAR     : [a-zA-Z];
 
+// Bypassed characters (default mode)
 COMMENT_MULTILINE : '%{' .*? '%}' -> skip;
 COMMENT_INLINE    : '%' .*? WS -> skip;
 WS                : [ \t\r\n]+ -> skip;
-ALL               : .+? -> skip;
 
+// ---- Note-entry mode: For entering pitches ----
 mode NOTE_ENTRY;
 
+// Exiting note-entry mode
 END_NOTE : RBRACE_N -> popMode;
+
+// Nested Voice contexts are allowed
+VOICE_CTX_N:
+    '\\new Voice' WS? LBRACE_N -> pushMode(NOTE_ENTRY);
+
+// Notes
 NOTE     : PITCH ACCIDENTAL* OCTAVE? (INTEGER_N | INTEGER_N '.')?;
 OCTAVE   : '\''+ | ','+;
 TIME_SIG : INTEGER_N '/' INTEGER_N;
 BARLINE  : '"' BAR_CHAR+ '"';
 
-// Notation Commands
+// Other notation commands
 BAR_KW      : '\\bar';
 CLEF_KW     : '\\clef';
 DEFAULT_KW  : '\\default';
@@ -64,15 +73,7 @@ fragment PITCH      : [a-gr];
 fragment ACCIDENTAL : 's' | 'is' | 'es';
 fragment BAR_CHAR   : [|.;![\]];
 
-// Deeper levels in note entry mode
-VOICE_CTX_N:
-    '\\new Voice' WS? LBRACE_N -> pushMode(NOTE_ENTRY);
-POLYPHONY_N:
-    {System.out.println("polyphonyn");} LANGLE_N LANGLE_N WS? LBRACE_N -> pushMode(NOTE_ENTRY);
-NEXT_POLYPHONY_N:
-    FSLASH_N FSLASH_N WS? LBRACE_N -> pushMode(NOTE_ENTRY);
-END_POLYPHONY_N : RANGLE_N RANGLE_N -> popMode;
-
+// Special characters (note-entry mode)
 HASH_N    : '#' -> type(HASH);
 LBRACE_N  : {System.out.println("lbracen");} '{' -> type(LBRACE);
 RBRACE_N  : '}' -> type(RBRACE);
@@ -85,7 +86,33 @@ FSLASH_N  : '/' -> type(FSLASH);
 INTEGER_N : [0-9]+ -> type(INTEGER);
 STRING_N  : '"' STRING_CHAR+ '"' -> type(STRING);
 
+// Bypassed characters (note-entry mode)
 COMMENT_MULTILINE_N : '%{' .*? '%}' -> skip;
 COMMENT_INLINE_N    : '%' .*? WS -> skip;
 WS_N                : [ \t\r\n]+ -> skip;
-ALL_N               : .+? -> skip;
+
+// ---- Polyphony mode: For creating side-by-side note blocks ----
+mode POLYPHONY;
+
+// Mode transitions
+NEXT_NOTEBLOCK_P : FSLASH_P FSLASH_P;
+NEW_NOTEBLOCK_P  : LBRACE_P -> pushMode(NOTE_ENTRY);
+END_POLYPHONY_P  : RANGLE_P RANGLE_P -> popMode;
+
+// Special characters (polyphony mode)
+HASH_P    : '#' -> type(HASH);
+LBRACE_P  : {System.out.println("lbracen");} '{' -> type(LBRACE);
+RBRACE_P  : '}' -> type(RBRACE);
+LANGLE_P  : {System.out.println("langlen");} '<' -> type(LANGLE);
+RANGLE_P  : '>' -> type(RANGLE);
+EQUALS_P  : '=' -> type(EQUALS);
+DOT_P     : '.' -> type(DOT);
+BSLASH_P  : '\\' -> type(BSLASH);
+FSLASH_P  : '/' -> type(FSLASH);
+INTEGER_P : [0-9]+ -> type(INTEGER);
+STRING_P  : '"' STRING_CHAR+ '"' -> type(STRING);
+
+// Bypassed characters (polyphony mode)
+COMMENT_MULTILINE_P : '%{' .*? '%}' -> skip;
+COMMENT_INLINE_P    : '%' .*? WS -> skip;
+WS_P                : [ \t\r\n]+ -> skip;
