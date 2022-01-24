@@ -17,15 +17,13 @@ score_block:
 staffgroup_block:
     STAFFGROUP_CTX LANGLE LANGLE staff_block* RANGLE RANGLE;
 staff_block:
-    STAFF_CTX with_block? LBRACE prefix_block? (
+    STAFF_CTX prefix_block? (
         note_block
         | polyphony_block
         | voice_block
     )+ RBRACE;
 prefix_block : (time_cmd? key_cmd) | time_cmd;
-with_block   : WITH_KW LBRACE assignment* RBRACE;
-voice_block:
-    VOICE_CTX LBRACE (note_block | polyphony_block)* RBRACE;
+voice_block  : VOICE_CTX (note_block | polyphony_block)* END_NOTE;
 note_block: (
         relative_block
         | note_cmd
@@ -33,9 +31,9 @@ note_block: (
         | chord
         | NOTE
     )+;
-relative_block : RELATIVE_KW NOTE LBRACE note_block RBRACE;
+relative_block : RELATIVE_KW NOTE LBRACE note_block END_NOTE;
 polyphony_block:
-    LANGLE LANGLE LBRACE note_block RBRACE SLASH SLASH LBRACE note_block RBRACE RANGLE RANGLE;
+    POLYPHONY_N note_block END_NOTE NEXT_POLYPHONY_N note_block END_NOTE END_POLYPHONY_N;
 chord : LANGLE NOTE+ RANGLE (INTEGER | INTEGER DOT)?;
 
 // One-line commands

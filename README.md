@@ -24,11 +24,13 @@ the following commands should parse correctly:
   ```lilypond
   \header, \layout, \score, \version
   \new [Staff, StaffGroup, Voice]
-  \with
   #(...) % Scheme commands
   % Comments
   %{ Multiline comments %}
   ```
+
+Note that only three contexts are supported, and `\with` blocks are
+not yet parsed.
 
 - Notation commands
 
