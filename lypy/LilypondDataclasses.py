@@ -7,8 +7,7 @@ from LilypondParser import LilypondParser
 
 # Enum constants
 class CommandName(Enum):
-    # There are many Lilypond commands I am omitting here.
-    # A fuller implementation should account for them all.
+    # There are many Lilypond commands omitted here.
     CONSISTS = auto()
     OVERRIDE = auto()
     REMOVE = auto()
@@ -30,7 +29,7 @@ class NoteLength(Enum):
     ONETWENTYEIGHTH = auto()
     TWOFIFTYSIXTH = auto()
     FIVETWELFTH = auto()
-    ONEOHTWENTYEIGHTH = auto()
+    THOUSANDTWENTYFOURTH = auto()
 
 class DiaClass(Enum):
     A = auto()
@@ -41,6 +40,25 @@ class DiaClass(Enum):
     F = auto()
     G = auto()
 
+    @classmethod
+    def numericDiaClass(cls, dpc):
+        if dpc == cls.C:
+            return 0
+        elif dpc == cls.D:
+            return 2
+        elif dpc == cls.E:
+            return 4
+        elif dpc == cls.F:
+            return 5
+        elif dpc == cls.G:
+            return 7
+        elif dpc == cls.A:
+            return 9
+        elif dpc == cls.B:
+            return 11
+        else:
+            raise ValueError('Unable to convert diatonic class to pc number')
+
 class Accidental(Enum):
     FLAT = auto()
     SHARP = auto()
@@ -49,6 +67,35 @@ class Accidental(Enum):
     DOUBLESHARP = auto()
     NATURALSHARP = auto()
     NATURALFLAT = auto()
+
+    @classmethod
+    def convertAccidental(cls, lyAcc):
+        if lyAcc == 'is':
+            return cls.SHARP
+        elif lyAcc in ('s', 'es'):
+            return cls.FLAT
+        elif lyAcc == 'isis':
+            return cls.DOUBLESHARP
+        elif lyAcc in ('ses', 'eses'):
+            return cls.DOUBLEFLAT
+        else:
+            raise ValueError('Unable to parse Lilypond accidental')
+
+    @classmethod
+    def numericAccidental(cls, acc):
+        if acc in (cls.FLAT, cls.NATURALFLAT):
+            return -1
+        elif acc == cls.NATURAL:
+            return 0
+        elif acc in (cls.SHARP, cls.NATURALSHARP):
+            return 1
+        elif acc == cls.DOUBLEFLAT:
+            return -2
+        elif acc == cls.DOUBLESHARP:
+            return 2
+        else:
+            raise ValueError('Unable to convert accidental to number')
+
 
 class Mode(Enum):
     MAJOR = auto()
@@ -62,15 +109,15 @@ class Mode(Enum):
     LOCRIAN = auto()
 
 class ClefType(Enum):
-    CLEF_TREBLE = auto()
-    CLEF_BASS = auto()
+    TREBLE = auto()
+    BASS = auto()
 
-class Barline(Enum):
-    BAR_SINGLE = auto()
-    BAR_DOUBLE = auto()
-    BAR_FINAL = auto()
-    BAR_START_REPEAT = auto()
-    BAR_END_REPEAET = auto()
+class BarlineType(Enum):
+    SINGLE = auto()
+    DOUBLE = auto()
+    FINAL = auto()
+    START_REPEAT = auto()
+    END_REPEAET = auto()
 
 class Extra(Enum):
     FERMATA = auto()
@@ -115,29 +162,8 @@ class WithCmd(Group):
     Commands: List(Command)
 
 @dataclass
-class Duration(Node):
-    NoteLength: NoteLength
-    Dots: Optional[int]
-
-@dataclass
-class Time(Node):
-    Numerator: int
-    Denominator: int
-
-@dataclass
-class Key(Node):
-    Sharps: int
-    Mode: Mode
-
-@dataclass
-class Pitch(Node):
-    DiaClass: DiaClass
-    Accidental: Accidental
-    Octave: Number
-
-@dataclass
-class Clef(Node):
-    Type: ClefType
+class Barline(Node):
+    BarStyle: BarlineType
 
 @dataclass
 class Chord(Node):
@@ -146,10 +172,86 @@ class Chord(Node):
     Extras: Optional[List(Extra)]
 
 @dataclass
-class Tempo(Node):
-    Desc: str
-    Unit = int
-    PerMin = int
+class Clef(Node):
+    Shape: str
+    Line: int
+
+    @staticmethod
+    def clefInfo(clefType):
+        if (clefType.upper() == 'TREBLE'):
+            shape = 'G'
+            line = 2
+        elif (clefType.upper() == 'BASS'):
+            shape = 'F'
+            line = 4
+        else:
+            raise ValueError('Invalid clef type')
+
+        return (shape, line)
+
+
+@dataclass
+class Duration(Node):
+    NoteLength: NoteLength
+    Dots: Optional[int]
+
+@dataclass
+class Fermata(Node):
+    pass
+
+class Pitch(Node):
+    def __init__(self, pitchStr, octave=-1):
+        self.Name = pitchStr
+        self.DiaClass = DiaClass[pitchStr[0]]
+        self.Accidental = Accidental.convertAccidental(pitchStr[1:])
+        self.Octave = octave
+        self.PC = (DiaClass.numericDiaClass(self.DiaClass), Accidental.numericAccidental(self.Accidental))
+
+@dataclass
+class Key(Node):
+    Pitch: Pitch
+    Fifths: int
+    Mode: Mode
+
+    @staticmethod
+    def findFifths(pitch):
+        # We will work mod 15 then translate down to 0-center
+        cMaj = 8
+        fifths = cMaj
+
+        if pitch.DiaClass == DiaClass.F:
+            fifths -= 1
+        elif pitch.DiaClass == DiaClass.C:
+            pass
+        elif pitch.DiaClass == DiaClass.G:
+            fifths += 1
+        elif pitch.DiaClass == DiaClass.D:
+            fifths += 2
+        elif pitch.DiaClass == DiaClass.A:
+            fifths += 3
+        elif pitch.DiaClass == DiaClass.E:
+            fifths += 4
+        elif pitch.DiaClass == DiaClass.B:
+            fifths += 5
+        else:
+            raise ValueError("Invalid DiaClass in Key")
+
+        if pitch.Accidental == Accidental.NATURAL:
+            pass
+        elif pitch.Accidental == Accidental.FLAT:
+            fifths -= 7
+        elif pitch.Accidental == Accidental.SHARP:
+            fifths += 7
+        else:
+            raise ValueError("Invalid Accidental in Key")
+
+        fifths %= 15
+        fifths -= 8
+
+        return fifths
+
+
+
 
 @dataclass
 class NoteGroup(Group):
@@ -157,6 +259,10 @@ class NoteGroup(Group):
     Key: Optional[Key]
     Tempo: Optional[Tempo]
     Notes = List(Chord)
+
+@dataclass
+class RehearsalMark(Node):
+    pass
 
 @dataclass
 class Staff(Group):
@@ -177,6 +283,17 @@ class ScoreFile(Group):
     SchemeCmds: Optional[SchemeCmd]
     Score: Score
     Version: Version
+
+@dataclass
+class Tempo(Node):
+    Desc: str
+    Unit = int
+    PerMin = int
+
+@dataclass
+class Time(Node):
+    Numerator: int
+    Denominator: int
 
 @dataclass
 class Voice(Group):

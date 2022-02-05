@@ -90,22 +90,26 @@ def BarCmdToAst(self):
 LP.Bar_cmdContext = BarCmdToAst
 
 def ClefCmdToAst(self):
-    pass
+    return Clef(Clef.clefInfo(self.ID()))
 
 LP.Clef_cmdContext = ClefCmdToAst
 
 def FermataCmdToAst(self):
-    pass
+    return Fermata()
 
 LP.Fermata_cmdContext = FermataCmdToAst
 
 def KeyCmdToAst(self):
-    pass
+    return Key(
+        Pitch=Pitch(self.NOTE()),
+        Fifths=Key.findFifths(Pitch(self.NOTE())),
+        Mode=Mode[self.MODE_KW().upper()]
+    )
 
 LP.Key_cmdContext = KeyCmdToAst
 
 def MarkCmdToAst(self):
-    pass
+    return RehearsalMark()
 
 LP.Mark_cmdContext = MarkCmdToAst
 
