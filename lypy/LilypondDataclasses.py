@@ -1,5 +1,5 @@
 from typing import List, Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 from numbers import Number
 
@@ -117,7 +117,7 @@ class BarlineType(Enum):
     DOUBLE = auto()
     FINAL = auto()
     START_REPEAT = auto()
-    END_REPEAET = auto()
+    END_REPEAT = auto()
 
 class Extra(Enum):
     FERMATA = auto()

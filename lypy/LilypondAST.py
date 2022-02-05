@@ -1,141 +1,141 @@
 from LilypondParser import LilypondParser as LP
 from LilypondDataclasses import *
 
-def ScoreFileToAst(self):
+def ScoreFileToLyAst(self):
     return ScoreFile(
-        Header=self.header_block().toAst(),
-        SchemeCmds=[scheme_cmd.toAst() for scheme_cmd in self.scheme_cmds()],
-        Score=self.score_block().toAst(),
-        Version=self.version_cmd().toAst()
+        Header=self.header_block().toLyAst(),
+        SchemeCmds=[scheme_cmd.toLyAst() for scheme_cmd in self.scheme_cmds()],
+        Score=self.score_block().toLyAst(),
+        Version=self.version_cmd().toLyAst()
     )
 
-LP.Score_fileContext.toAst = ScoreFileToAst
+LP.Score_fileContext.toLyAst = ScoreFileToLyAst
 
-def HeaderBlockToAst(self):
+def HeaderBlockToLyAst(self):
     return Header(
         # TODO: this does not handle the case where Value is
         # a scheme_cmd
         Metadata=[Metadata(Field=line.ID(), Value=line.STRING()) for line in self.assignment()]
     )
 
-LP.Header_blockContext.toAst = HeaderBlockToAst
+LP.Header_blockContext.toLyAst = HeaderBlockToLyAst
 
-def AssignmentToAst(self):
+def AssignmentToLyAst(self):
     pass
 
-LP.AssignmentContext.toAst = AssignmentToAst
+LP.AssignmentContext.toLyAst = AssignmentToLyAst
 
-def ScoreBlockToAst(self):
-    return Score(StaffGroups=[staffgroup.toAst() for staffgroup in self.staffgroup_block()])
+def ScoreBlockToLyAst(self):
+    return Score(StaffGroups=[staffgroup.toLyAst() for staffgroup in self.staffgroup_block()])
 
-LP.Score_blockContext.toAst = ScoreBlockToAst
+LP.Score_blockContext.toLyAst = ScoreBlockToLyAst
 
-def StaffGroupBlockToAst(self):
-    return StaffGroup(Staves=[staff.toAst() for staff in self.staff_block()])
+def StaffGroupBlockToLyAst(self):
+    return StaffGroup(Staves=[staff.toLyAst() for staff in self.staff_block()])
 
-LP.Staffgroup_blockContext.toAst = StaffGroupBlockToAst
+LP.Staffgroup_blockContext.toLyAst = StaffGroupBlockToLyAst
 
-def StaffBlockToAst(self):
+def StaffBlockToLyAst(self):
     return Staff(
-        WithCmd=self.with_block().toAst(),
-        Prefix=self.prefix_block().toAst(),
-        Notes=self.note_block().toAst()
+        WithCmd=self.with_block().toLyAst(),
+        Prefix=self.prefix_block().toLyAst(),
+        Notes=self.note_block().toLyAst()
     )
 
-LP.Staff_blockContext.toAst = StaffBlockToAst
+LP.Staff_blockContext.toLyAst = StaffBlockToLyAst
 
-def PrefixBlockToAst(self):
+def PrefixBlockToLyAst(self):
     pass
 
-LP.Prefix_blockContext = PrefixBlockToAst
+LP.Prefix_blockContext = PrefixBlockToLyAst
 
-def WithBlockToAst(self):
+def WithBlockToLyAst(self):
     pass
 
-LP.With_blockContext = WithBlockToAst
+LP.With_blockContext = WithBlockToLyAst
 
-def VoiceBlockToAst(self):
+def VoiceBlockToLyAst(self):
     pass
 
-LP.Voice_blockContext = VoiceBlockToAst
+LP.Voice_blockContext = VoiceBlockToLyAst
 
-def NoteBlockToAst(self):
+def NoteBlockToLyAst(self):
     pass
 
-LP.Note_blockContext = NoteBlockToAst
+LP.Note_blockContext = NoteBlockToLyAst
 
-def RelativeBlockToAst(self):
+def RelativeBlockToLyAst(self):
     pass
 
-LP.Relative_blockContext = RelativeBlockToAst
+LP.Relative_blockContext = RelativeBlockToLyAst
 
-def PolyphonyBlockToAst(self):
+def PolyphonyBlockToLyAst(self):
     pass
 
-LP.Polyphony_blockContext = PolyphonyBlockToAst
+LP.Polyphony_blockContext = PolyphonyBlockToLyAst
 
-def ChordToAst(self):
+def ChordToLyAst(self):
     pass
 
-LP.ChordContext = ChordToAst
+LP.ChordContext = ChordToLyAst
 
-def NoteCmdToAst(self):
+def NoteCmdToLyAst(self):
     pass
 
-LP.Note_cmdContext = NoteCmdToAst
+LP.Note_cmdContext = NoteCmdToLyAst
 
-def BarCmdToAst(self):
+def BarCmdToLyAst(self):
     pass
 
-LP.Bar_cmdContext = BarCmdToAst
+LP.Bar_cmdContext = BarCmdToLyAst
 
-def ClefCmdToAst(self):
+def ClefCmdToLyAst(self):
     return Clef(Clef.clefInfo(self.ID()))
 
-LP.Clef_cmdContext = ClefCmdToAst
+LP.Clef_cmdContext = ClefCmdToLyAst
 
-def FermataCmdToAst(self):
+def FermataCmdToLyAst(self):
     return Fermata()
 
-LP.Fermata_cmdContext = FermataCmdToAst
+LP.Fermata_cmdContext = FermataCmdToLyAst
 
-def KeyCmdToAst(self):
+def KeyCmdToLyAst(self):
     return Key(
         Pitch=Pitch(self.NOTE()),
         Fifths=Key.findFifths(Pitch(self.NOTE())),
         Mode=Mode[self.MODE_KW().upper()]
     )
 
-LP.Key_cmdContext = KeyCmdToAst
+LP.Key_cmdContext = KeyCmdToLyAst
 
-def MarkCmdToAst(self):
+def MarkCmdToLyAst(self):
     return RehearsalMark()
 
-LP.Mark_cmdContext = MarkCmdToAst
+LP.Mark_cmdContext = MarkCmdToLyAst
 
-def SchemeCmdToAst(self):
+def SchemeCmdToLyAst(self):
     return SchemeCmd(Command=(self.SCHEME_GP() if self.SCHEME_GP() is not None else self.SCHEME_ATOM()))
 
-LP.Scheme_cmdContext = SchemeCmdToAst
+LP.Scheme_cmdContext = SchemeCmdToLyAst
 
-def TempoCmdToAst(self):
+def TempoCmdToLyAst(self):
     return Tempo(
         Desc=self.STRING(),
         Unit=self.INTEGER()[0],
         PerMin=self.INTEGER()[1]
     )
 
-LP.Tempo_cmdContext = TempoCmdToAst
+LP.Tempo_cmdContext = TempoCmdToLyAst
 
-def TimeCmdToAst(self):
+def TimeCmdToLyAst(self):
     return Time(
         Numerator=self.TIME_SIG().INTEGER()[0],
         Denominator=self.TIME_SIG().INTEGER()[1]
     )
 
-LP.Time_cmdContext = TimeCmdToAst
+LP.Time_cmdContext = TimeCmdToLyAst
 
-def VersionCmdToAst(self):
+def VersionCmdToLyAst(self):
     return Version(LilypondVer=self.STRING())
 
-LP.Version_cmdContext = VersionCmdToAst
+LP.Version_cmdContext = VersionCmdToLyAst
