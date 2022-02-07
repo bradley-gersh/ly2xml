@@ -2,7 +2,7 @@ import sys
 
 import antlr4 as antlr
 
-from lypy import LilypondLexer, LilypondParser, LilypondErrorListener
+from ly2xml import LilypondLexer, LilypondParser, LilypondErrorListener
 
 def main(argv):
     # Parse the file passed in from a command line argument

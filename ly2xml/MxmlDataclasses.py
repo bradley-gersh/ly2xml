@@ -113,3 +113,7 @@ class Header(Node):
 class ScorePartwise(Node):
     Header: Header
     Parts: List[Part]
+
+@dataclass
+class MusXMLFile(Node):
+    Score: ScorePartwise
