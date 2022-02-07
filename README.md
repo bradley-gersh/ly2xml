@@ -1,7 +1,15 @@
-# LyParse
+# Ly2XML
 
-This is a small Python 3 parser for a subset of [Lilypond](https://lilypond.org), a DSL
-for music notation.
+This is a Python 3 script, currently under development, for converting a subset of
+[Lilypond](https://lilypond.org) music notation to [MusicXML](https://www.w3.org/2021/06/musicxml40/)
+format, as used by engraving software such as [MuseScore](https://musescore.org/en) and
+[Finale](https://www.finalemusic.com/).
+
+## Current status
+
+At present, this script is not yet ready for use. It currently produces parse
+trees for a subset of the Lilypond language (see below); the transformation to
+an AST and rendering into MusicXML are in progress.
 
 ## Usage
 
