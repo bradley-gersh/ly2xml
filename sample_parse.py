@@ -34,6 +34,12 @@ def main(argv):
         print(e)
 
     # Convert to a MusicXML AST
+    # try:
+    #     mxAst = lyAst.toMxAst()
+    #     print("Lilypond AST generated from parse tree.")
+    # except Exception as e:
+    #     print("Error while attempting to convert parse tree to Lilypond AST:")
+    #     print(e)
 
     # Produce MusicXML file from MusicXML AST
 

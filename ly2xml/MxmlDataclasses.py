@@ -3,13 +3,14 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from datetime import date
 
-# Enum constants
-class Node:
-    def __init__(self):
-        self.children = []
+from .LilypondDataclasses import Node
 
-    def getChildren(self):
-        return self.children
+# class Node:
+#     def __init__(self):
+#         self.children = []
+
+#     def getChildren(self):
+#         return self.children
 
 @dataclass
 class Event(Node):
@@ -109,11 +110,38 @@ class Header(Node):
     Identification: Identification
     PartList: List[ScorePart]
 
+    def __post_init__(self):
+        self.children = [self.Work, self.Identification] + self.PartList
+
+    def enter(self):
+        pass
+
+    def leave(self):
+        pass
+
 @dataclass
 class ScorePartwise(Node):
     Header: Header
     Parts: List[Part]
 
+    def __post_init__(self):
+        self.children = [self.Header] + self.Parts
+
+    def enter(self):
+        return '<score-partwise version="4.0">'
+
+    def leave(self):
+        return '</score-partwise>'
+
 @dataclass
 class MusXMLFile(Node):
     Score: ScorePartwise
+
+    def __post_init__(self):
+        self.children = [self.Score]
+
+    def enter(self):
+        return '<?xml version="1.0" encoding="UTF-8" standalone="no"?> <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">'
+
+    def leave(self):
+        pass

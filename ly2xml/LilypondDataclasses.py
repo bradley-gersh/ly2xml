@@ -3,8 +3,6 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from numbers import Number
 
-from .LilypondParser import LilypondParser
-
 # Enum constants
 class CommandName(Enum):
     # There are many Lilypond commands omitted here.
@@ -154,6 +152,12 @@ class Node:
     def __init__(self):
         self.children = []
 
+    def setChildren(self, newChildren):
+        self.children = newChildren
+
+    def appendChildren(self, newChildren):
+        self.children += newChildren
+
     def getChildren(self):
         return self.children
 
@@ -175,6 +179,9 @@ class Metadata(Node):
 class Header(Group):
     Metadata: Optional[List[Metadata]]
 
+    def __post_init__(self):
+        self.children = [self.Metadata] if self.Metadata else []
+
 @dataclass
 class SchemeCmd(Node):
     Command: str
@@ -186,6 +193,9 @@ class Version(Node):
 @dataclass
 class WithCmd(Group):
     Commands: List[Command]
+
+    def __post_init__(self):
+        self.children = [self.Commands]
 
 @dataclass
 class NoteEvent(Node):
@@ -242,10 +252,16 @@ class Note(NoteEvent):
     Pitch: Pitch
     Duration: Duration
 
+    def __post_init__(self):
+        self.children = [self.Pitch, self.Duration]
+
 @dataclass
 class Chord(NoteEvent):
-    Notes: Note
+    Notes: List[Note]
     # Extras: Optional[List[Extra]]
+
+    def __post_init__(self):
+        self.children = self.Notes
 
 @dataclass
 class Key(NoteEvent):
@@ -253,6 +269,8 @@ class Key(NoteEvent):
     # Fifths: int
     Mode: Mode = Mode.MAJOR
 
+    def __post_init__(self):
+        self.children = [self.Pitch, self.Mode]
     # @staticmethod
     # def findFifths(pitch):
     #     # We will work mod 15 then translate down to 0-center
@@ -293,8 +311,11 @@ class Key(NoteEvent):
 @dataclass
 class NoteGroup(Group):
     NoteEvents: List[NoteEvent]
-    OctaveStyle: List[OctaveStyle]
+    OctaveStyle: OctaveStyle
     VoiceNumber: int
+
+    def __post_init__(self):
+        self.children = self.NoteEvents
 
 @dataclass
 class RehearsalMark(Node):
@@ -320,13 +341,22 @@ class Staff(Group):
     # WithCmd: Optional[WithCmd]
     Notes: NoteGroup
 
+    def __post_init__(self):
+        self.children = [self.Notes]
+
 @dataclass
 class StaffGroup(Group):
     Staves: List[Staff]
 
+    def __post_init__(self):
+        self.children = self.Staves
+
 @dataclass
 class Score(Group):
     StaffGroups: List[StaffGroup]
+
+    def __post_init__(self):
+        self.children = self.StaffGroups
 
 @dataclass
 class ScoreFile(Group):
@@ -334,6 +364,14 @@ class ScoreFile(Group):
     SchemeCmds: Optional[SchemeCmd]
     Score: Score
     Version: Version
+
+    def __post_init__(self):
+        self.children = [self.Header] if self.Header else []
+
+        if self.SchemeCmds:
+            self.children += self.SchemeCmds
+
+        self.children += [Score, Version]
 
 @dataclass
 class Tempo(NoteEvent):
@@ -350,3 +388,7 @@ class Time(NoteEvent):
 class Voice(Group):
     WithCmd: Optional[WithCmd]
     Notes: NoteGroup
+
+    def __post_init__(self):
+        self.children = [self.WithCmd] if self.WithCmd else []
+        self.children += [self.Notes]
