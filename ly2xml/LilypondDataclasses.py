@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from numbers import Number
 
-from LilypondParser import LilypondParser
+from .LilypondParser import LilypondParser
 
 # Enum constants
 class CommandName(Enum):
@@ -39,6 +39,7 @@ class DiaClass(Enum):
     E = auto()
     F = auto()
     G = auto()
+    R = auto()
 
     # @classmethod
     # def numericDiaClass(cls, dpc):
@@ -144,7 +145,7 @@ class BarlineType(Enum):
             raise ValueError('')
 
 # Enum constants
-def OctaveStyle(Enum):
+class OctaveStyle(Enum):
     DEFAULT = auto()
     RELATIVE = auto()
 
@@ -172,7 +173,7 @@ class Metadata(Node):
 
 @dataclass
 class Header(Group):
-    Metadata: Optional[List(Metadata)]
+    Metadata: Optional[List[Metadata]]
 
 @dataclass
 class SchemeCmd(Node):
@@ -184,7 +185,7 @@ class Version(Node):
 
 @dataclass
 class WithCmd(Group):
-    Commands: List(Command)
+    Commands: List[Command]
 
 @dataclass
 class NoteEvent(Node):
@@ -193,16 +194,6 @@ class NoteEvent(Node):
 @dataclass
 class Barline(NoteEvent):
     BarStyle: BarlineType
-
-@dataclass
-class Note(NoteEvent):
-    Pitch: Pitch
-    Length: NoteLength
-
-@dataclass
-class Chord(NoteEvent):
-    Notes: Note
-    # Extras: Optional[List(Extra)]
 
 @dataclass
 class Clef(Node):
@@ -226,7 +217,7 @@ class Clef(Node):
 
 @dataclass
 class Duration(Node):
-    NoteLength: NoteLength
+    NoteLength: int
     Dots: Optional[int]
 
 @dataclass
@@ -242,9 +233,19 @@ class Pitch(Node):
     def __init__(self, pitchStr, octave=-1):
         self.Name = pitchStr
         self.DiaClass = DiaClass[pitchStr[0].upper()]
-        self.Accidental = Accidental.convertAccidental(pitchStr[1:]) if len(pitchStr) > 1 else Accidental.NATURAL
+        self.Accidental = Accidental.fromLyStr(pitchStr[1:]) if len(pitchStr) > 1 else Accidental.NATURAL
         self.Octave = octave
-        self.PC = (DiaClass.numericDiaClass(self.DiaClass), Accidental.numericAccidental(self.Accidental))
+        # self.PC = (DiaClass.numericDiaClass(self.DiaClass), Accidental.numericAccidental(self.Accidental))
+
+@dataclass
+class Note(NoteEvent):
+    Pitch: Pitch
+    Duration: Duration
+
+@dataclass
+class Chord(NoteEvent):
+    Notes: Note
+    # Extras: Optional[List[Extra]]
 
 @dataclass
 class Key(NoteEvent):
@@ -291,8 +292,8 @@ class Key(NoteEvent):
 
 @dataclass
 class NoteGroup(Group):
-    NoteEvents: List(NoteEvent)
-    OctaveStyle: List(OctaveStyle)
+    NoteEvents: List[NoteEvent]
+    OctaveStyle: List[OctaveStyle]
     VoiceNumber: int
 
 @dataclass
@@ -316,16 +317,16 @@ class RehearsalCounter:
 
 @dataclass
 class Staff(Group):
-    WithCmd: Optional[WithCmd]
+    # WithCmd: Optional[WithCmd]
     Notes: NoteGroup
 
 @dataclass
 class StaffGroup(Group):
-    Staves: List(Staff)
+    Staves: List[Staff]
 
 @dataclass
 class Score(Group):
-    StaffGroups: List(StaffGroup)
+    StaffGroups: List[StaffGroup]
 
 @dataclass
 class ScoreFile(Group):
@@ -336,9 +337,9 @@ class ScoreFile(Group):
 
 @dataclass
 class Tempo(NoteEvent):
-    Desc: str
-    Unit = int
-    PerMin = int
+    Desc: Optional[str]
+    Unit: Optional[int]
+    PerMin: Optional[int]
 
 @dataclass
 class Time(NoteEvent):

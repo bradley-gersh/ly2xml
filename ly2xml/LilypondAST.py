@@ -1,20 +1,19 @@
 from enum import Enum, auto
 import re
 
-from LilypondParser import LilypondParser as LP
-from LilypondDataclasses import *
+from .LilypondParser import LilypondParser as LP
+from .LilypondDataclasses import *
 
 rehearsalCounter = RehearsalCounter()
 
 # Methods to create AST nodes
 def ScoreFileToLyAst(self): #verified
-
     rehearsalCounter.resetMark()
     # Only the first header (metadata) block, first version, and
     # first score commands are accepted.
     return ScoreFile(
         Header=self.header_block()[0].toLyAst(),
-        SchemeCmds=[scheme_cmd.toLyAst() for scheme_cmd in self.scheme_cmds()],
+        SchemeCmds=[scheme_cmd.toLyAst() for scheme_cmd in self.scheme_cmd()],
         Score=self.score_block()[0].toLyAst(),
         Version=self.version_cmd()[0].toLyAst()
     )
@@ -65,15 +64,16 @@ def PrefixBlockToLyAst(self): #verified
 
 LP.Prefix_blockContext.toLyAst = PrefixBlockToLyAst
 
-def WithBlockToLyAst(self): #verified
+# def WithBlockToLyAst(self): #verified
     # We will ignore the \with command for now, which
     # involves formatting issues.
-    pass
+    # pass
 
-LP.With_blockContext.toLyAst = WithBlockToLyAst
+# LP.With_blockContext.toLyAst = WithBlockToLyAst
 
 def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, octaveStyle=OctaveStyle.DEFAULT): #need to add polyphony, but otherwise verified
     blockEvents = []
+    lastDuration = 4
 
     if firstTimeSig is not None:
         blockEvents.append(firstTimeSig)
@@ -90,12 +90,16 @@ def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, o
         elif type(child) == LP.Note_cmdContext:
             blockEvents.append(child.toLyAst())
         elif type(child) == LP.NoteContext:
-            blockEvents.append(child.toLyAst())
+            newNote = child.toLyAst(lastDuration)
+            lastDuration = newNote.Duration.NoteLength
+            blockEvents.append(newNote)
+        elif type(child) == LP.ChordContext:
+            blockEvents.append(Chord(Notes=[note.toLyAst(lastDuration) for note in child.note()]))
         else:
-            raise ValueError('Unknown event type found in note block')
+            raise ValueError('Unknown event type found in note block: ' + str(type(child)))
 
 
-    return NoteGroup(NoteEvents=blockEvents, octaveStyle=octaveStyle, voiceNumber=voiceNumber)
+    return NoteGroup(NoteEvents=blockEvents, OctaveStyle=octaveStyle, VoiceNumber=voiceNumber)
 
 LP.Note_blockContext.toLyAst = NoteBlockToLyAst
 
@@ -135,8 +139,31 @@ def ChordToLyAst(self):
 
 LP.ChordContext.toLyAst = ChordToLyAst
 
-def NoteToLyAst(self):
-    pass
+def NoteToLyAst(self, lastDuration):
+    pitchStr = self.getText()
+    pitchFormat = '([a-z]+)([,\']+)?([0-9]+)?(\.+)?'
+    match = re.fullmatch(pitchFormat, pitchStr)
+    (pc, octaveStr, length, dots) = match.group(1, 2, 3, 4)
+
+    octaveNum = toOctaveNum(octaveStr)
+    lengthNum = float(length) if length is not None else lastDuration
+    dotsNum = int(len(dots)) if dots is not None else 0
+
+    return Note(Pitch=Pitch(pc, octave=octaveNum), Duration=Duration(NoteLength=lengthNum, Dots=dotsNum))
+
+LP.NoteContext.toLyAst = NoteToLyAst
+
+def toOctaveNum(string):
+    blank = 3
+    if string == '' or string is None:
+        return blank
+    elif re.fullmatch(',+', string):
+        return blank - len(string)
+    elif re.fullmatch('\'+', string):
+        return blank + len(string)
+    else:
+        raise ValueError('Invalid octave string')
+
 
 def NoteCmdToLyAst(self): #verified
     if len(self.children) > 1:
@@ -220,10 +247,17 @@ def SchemeCmdToLyAst(self): #verified
 LP.Scheme_cmdContext.toLyAst = SchemeCmdToLyAst
 
 def TempoCmdToLyAst(self): #verified
+    desc = self.STRING().getText() if self.STRING() else ''
+
+    if self.INTEGER():
+        [unit, perMin] = [x.getText() for x in self.INTEGER()]
+    else:
+        [unit, perMin] = [None, None]
+
     return Tempo(
-        Desc=self.STRING().getText(),
-        Unit=self.INTEGER()[0].getText(),
-        PerMin=self.INTEGER()[1].getText()
+        Desc=desc,
+        Unit=unit,
+        PerMin=perMin,
     )
 
 LP.Tempo_cmdContext.toLyAst = TempoCmdToLyAst
