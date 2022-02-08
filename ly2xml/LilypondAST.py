@@ -1,26 +1,32 @@
+from enum import Enum, auto
+
 from LilypondParser import LilypondParser as LP
 from LilypondDataclasses import *
 
+# Methods to create AST nodes
 def ScoreFileToLyAst(self):
+    # Only the first header (metadata) block and first version
+    # commands are accepted.
     return ScoreFile(
-        Header=self.header_block().toLyAst(),
+        Header=self.header_block()[0].toLyAst(),
         SchemeCmds=[scheme_cmd.toLyAst() for scheme_cmd in self.scheme_cmds()],
         Score=self.score_block().toLyAst(),
-        Version=self.version_cmd().toLyAst()
+        Version=self.version_cmd()[0].toLyAst()
     )
 
 LP.Score_fileContext.toLyAst = ScoreFileToLyAst
 
 def HeaderBlockToLyAst(self):
     return Header(
-        # TODO: this does not handle the case where Value is
+        # Currently this does not handle the case where Value is
         # a scheme_cmd
-        Metadata=[Metadata(Field=line.ID(), Value=line.STRING()) for line in self.assignment()]
+        Metadata=[Metadata(Field=line.ID().getText(), Value=line.STRING().getText()) for line in self.assignment()]
     )
 
 LP.Header_blockContext.toLyAst = HeaderBlockToLyAst
 
 def AssignmentToLyAst(self):
+    # Handled by parent node (HeaderBlock)
     pass
 
 LP.AssignmentContext.toLyAst = AssignmentToLyAst
@@ -36,42 +42,71 @@ def StaffGroupBlockToLyAst(self):
 LP.Staffgroup_blockContext.toLyAst = StaffGroupBlockToLyAst
 
 def StaffBlockToLyAst(self):
+    (firstTime, firstKey) = self.prefix_block().toLyAst() if self.prefix_block() is not None else (Time(4, 4), Key())
+
     return Staff(
         WithCmd=self.with_block().toLyAst(),
-        Prefix=self.prefix_block().toLyAst(),
         Notes=self.note_block().toLyAst()
     )
 
 LP.Staff_blockContext.toLyAst = StaffBlockToLyAst
 
 def PrefixBlockToLyAst(self):
+    # Handled by parent node
     pass
 
 LP.Prefix_blockContext.toLyAst = PrefixBlockToLyAst
 
 def WithBlockToLyAst(self):
+    # We will ignore the \with command for now, which
+    # involves formatting issues.
     pass
 
 LP.With_blockContext.toLyAst = WithBlockToLyAst
 
-def VoiceBlockToLyAst(self):
-    pass
+def NoteBlockToLyAst(self, voiceNumber=1, firstTime=None, firstKey=None):
+    prefix = [] # Need to process
 
-LP.Voice_blockContext.toLyAst = VoiceBlockToLyAst
+    if firstTime is not None:
+        prefix.append(firstTime)
+    if firstKey is not None:
+        prefix.append(firstKey)
 
-def NoteBlockToLyAst(self):
-    blockEvents = []
+    blockEvents = [child for child in self.children]
 
-    return NoteGroup(NoteEvents=blockEvents)
+    octaveStyle = OctaveStyle.RELATIVE if self.relative_block() is not None else OctaveStyle.DEFAULT
+
+    return NoteGroup(NoteEvents=blockEvents, octaveStyle=octaveStyle, voiceNumber=voiceNumber)
 
 LP.Note_blockContext.toLyAst = NoteBlockToLyAst
 
 def RelativeBlockToLyAst(self):
+    # Relative blocks are handled at the NoteBlock level.
     pass
 
 LP.Relative_blockContext.toLyAst = RelativeBlockToLyAst
 
+def VoiceBlockToLyAst(self, voiceNumber=1):
+    # For now, we will not handle all the complexity of the
+    # \Voice command and assume that we only need to dig out
+    # a bare note block, which needs to be assigned a voice
+    # number.
+    return self.note_block.toLyAst(voiceNumber=voiceNumber)
+
+LP.Voice_blockContext.toLyAst = VoiceBlockToLyAst
+
 def PolyphonyBlockToLyAst(self):
+    # It can have multiple Voice blocks, each containing a note block
+    # Or multiple note blocks.
+    # If it has multiple note blocks, then each note block is
+    # assigned a voice number. We need an array of note blocks,
+    # each with a voice number.
+
+    # Or, if there are voice blocks, we need to dig into each one,
+    # extract the note block, and assign it a voice number.
+
+    # The voice numbers are assigned by the polyphony block
+    # and stored by the note block.
     pass
 
 LP.Polyphony_blockContext.toLyAst = PolyphonyBlockToLyAst
@@ -160,6 +195,6 @@ def TimeCmdToLyAst(self):
 LP.Time_cmdContext.toLyAst = TimeCmdToLyAst
 
 def VersionCmdToLyAst(self):
-    return Version(LilypondVer=self.STRING())
+    return Version(LilypondVer=self.VERSION_STR().getText())
 
 LP.Version_cmdContext.toLyAst = VersionCmdToLyAst

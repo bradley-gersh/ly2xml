@@ -24,6 +24,8 @@ def main(argv):
     except SyntaxError as e:
         print("Parsing error encountered while attempting to parse Lilypond file:")
         print(e)
+    else:
+        return tree
 
     # `tree` is the unedited parse tree. For documentation on the fields and
     # methods available on this tree and its nodes, see the documentation for

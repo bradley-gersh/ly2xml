@@ -143,6 +143,10 @@ class BarlineType(Enum):
         else:
             raise ValueError('')
 
+# Enum constants
+def OctaveStyle(Enum):
+    DEFAULT = auto()
+    RELATIVE = auto()
 
 # Node types
 class Node:
@@ -244,9 +248,9 @@ class Pitch(Node):
 
 @dataclass
 class Key(NoteEvent):
-    Pitch: Pitch
+    Pitch: Pitch = Pitch(DiaClass=DiaClass.C, Accidental=Accidental.NATURAL)
     # Fifths: int
-    Mode: Mode
+    Mode: Mode = Mode.MAJOR
 
     # @staticmethod
     # def findFifths(pitch):
@@ -290,6 +294,8 @@ class Key(NoteEvent):
 @dataclass
 class NoteGroup(Group):
     NoteEvents: List(NoteEvent)
+    OctaveStyle: List(OctaveStyle)
+    VoiceNumber: int
 
 @dataclass
 class RehearsalMark(Node):
