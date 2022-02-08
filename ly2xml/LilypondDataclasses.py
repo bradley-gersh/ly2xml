@@ -233,22 +233,22 @@ class Duration(Node):
 class Fermata(Node):
     pass
 
-@dataclass
+# @dataclass
 class Pitch(Node):
-    DiaClass: DiaClass
-    Accidental: Accidental
-    Octave: Optional[int]
+#     DiaClass: DiaClass
+#     Accidental: Accidental
+#     Octave: Optional[int]
 
-    # def __init__(self, pitchStr, octave=-1):
-        # self.Name = pitchStr
-        # self.DiaClass = DiaClass[pitchStr[0]]
-        # self.Accidental = Accidental.convertAccidental(pitchStr[1:])
-        # self.Octave = octave
-        # self.PC = (DiaClass.numericDiaClass(self.DiaClass), Accidental.numericAccidental(self.Accidental))
+    def __init__(self, pitchStr, octave=-1):
+        self.Name = pitchStr
+        self.DiaClass = DiaClass[pitchStr[0].upper()]
+        self.Accidental = Accidental.convertAccidental(pitchStr[1:]) if len(pitchStr) > 1 else Accidental.NATURAL
+        self.Octave = octave
+        self.PC = (DiaClass.numericDiaClass(self.DiaClass), Accidental.numericAccidental(self.Accidental))
 
 @dataclass
 class Key(NoteEvent):
-    Pitch: Pitch = Pitch(DiaClass=DiaClass.C, Accidental=Accidental.NATURAL)
+    Pitch: Pitch = Pitch('c')
     # Fifths: int
     Mode: Mode = Mode.MAJOR
 
@@ -289,8 +289,6 @@ class Key(NoteEvent):
 
     #     return fifths
 
-
-
 @dataclass
 class NoteGroup(Group):
     NoteEvents: List(NoteEvent)
@@ -299,7 +297,22 @@ class NoteGroup(Group):
 
 @dataclass
 class RehearsalMark(Node):
-    pass
+    Mark: str
+
+class RehearsalCounter:
+    def __init__(self, markType='letters'):
+        self.counter = -1
+        self.markType = markType
+
+    def resetMark(self):
+        self.counter = -1
+
+    def nextMark(self):
+        self.counter += 1
+        if self.markType == 'letters':
+            return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[self.counter % 26]
+        else:
+            return self.counter
 
 @dataclass
 class Staff(Group):

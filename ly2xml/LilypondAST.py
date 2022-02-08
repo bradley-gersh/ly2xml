@@ -1,10 +1,15 @@
 from enum import Enum, auto
+import re
 
 from LilypondParser import LilypondParser as LP
 from LilypondDataclasses import *
 
+rehearsalCounter = RehearsalCounter()
+
 # Methods to create AST nodes
 def ScoreFileToLyAst(self): #verified
+
+    rehearsalCounter.resetMark()
     # Only the first header (metadata) block, first version, and
     # first score commands are accepted.
     return ScoreFile(
@@ -67,7 +72,7 @@ def WithBlockToLyAst(self): #verified
 
 LP.With_blockContext.toLyAst = WithBlockToLyAst
 
-def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, octaveStyle=OctaveStyle.DEFAULT): #verified, but tricky
+def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, octaveStyle=OctaveStyle.DEFAULT): #need to add polyphony, but otherwise verified
     blockEvents = []
 
     if firstTimeSig is not None:
@@ -80,10 +85,15 @@ def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, o
             # For now, extract only the first note_block
             # from a relative_block
             blockEvents.append(child.note_block().toLyAst(octaveStyle=OctaveStyle.RELATIVE))
+        elif type(child) == LP.Polyphony_blockContext:
+            raise ValueError('Currently, polyphony blocks are not supported. Try a sample file without polyphony blocks, like sample_nopoly.ly')
         elif type(child) == LP.Note_cmdContext:
             blockEvents.append(child.toLyAst())
-        #elif type(child) == LP.
-        blockEvents.append(child) # commands generally
+        elif type(child) == LP.NoteContext:
+            blockEvents.append(child.toLyAst())
+        else:
+            raise ValueError('Unknown event type found in note block')
+
 
     return NoteGroup(NoteEvents=blockEvents, octaveStyle=octaveStyle, voiceNumber=voiceNumber)
 
@@ -125,81 +135,109 @@ def ChordToLyAst(self):
 
 LP.ChordContext.toLyAst = ChordToLyAst
 
-def NoteCmdToLyAst(self):
-    if self.bar_cmd() is not None:
+def NoteToLyAst(self):
+    pass
+
+def NoteCmdToLyAst(self): #verified
+    if len(self.children) > 1:
+        raise ValueError('Multiple commands in one note_cmd')
+
+    cmdType = type(self.children[0])
+
+    if cmdType == LP.Bar_cmdContext:
+    # if self.bar_cmd() is not None:
         return self.bar_cmd().toLyAst()
 
-    if self.clef_cmd() is not None:
+    if cmdType == LP.Clef_cmdContext:
+    # if self.clef_cmd() is not None:
         return self.clef_cmd().toLyAst()
 
-    if self.fermata_cmd() is not None:
+    if cmdType == LP.Fermata_cmdContext:
+    # if self.fermata_cmd() is not None:
         return self.fermata_cmd().toLyAst()
 
-    if self.key_cmd() is not None:
+    if cmdType == LP.Key_cmdContext:
+    # if self.key_cmd() is not None:
         return self.key_cmd().toLyAst()
 
-    if self.mark_cmd() is not None:
+    if cmdType == LP.Mark_cmdContext:
+    # if self.mark_cmd() is not None:
         return self.mark_cmd().toLyAst()
 
-    if self.tempo_cmd() is not None:
+    if cmdType == LP.Tempo_cmdContext:
+    # if self.tempo_cmd() is not None:
         return self.tempo_cmd().toLyAst()
 
-    if self.time_cmd() is not None:
+    if cmdType == LP.Time_cmdContext:
+    # if self.time_cmd() is not None:
         return self.time_cmd().toLyAst()
 
-    if self.voice_cmd() is not None:
+    if cmdType == LP.Bar_cmdContext:
+    # if self.voice_cmd() is not None:
         return self.voice_cmd().toLyAst()
 
 LP.Note_cmdContext.toLyAst = NoteCmdToLyAst
 
-def BarCmdToLyAst(self):
-    return Barline(BarStyle=BarlineType.fromLyStr(self.BARLINE()))
+def BarCmdToLyAst(self): #verified
+    lyStr = self.BARLINE().getText()
+
+    if lyStr[0] == '"':
+        lyStr = lyStr[1:-1]
+
+    return Barline(BarStyle=BarlineType.fromLyStr(lyStr))
 
 LP.Bar_cmdContext.toLyAst = BarCmdToLyAst
 
-def ClefCmdToLyAst(self):
+def ClefCmdToLyAst(self): #verified
     # return Clef(Clef.clefInfo(self.ID()))
-    return Clef(Type=ClefType[self.ID().upper()])
+    return Clef(Type=ClefType[self.ID().getText().upper()])
 
 LP.Clef_cmdContext.toLyAst = ClefCmdToLyAst
 
-def FermataCmdToLyAst(self):
+def FermataCmdToLyAst(self): #verified
     return Fermata()
 
 LP.Fermata_cmdContext.toLyAst = FermataCmdToLyAst
 
-def KeyCmdToLyAst(self):
+def KeyCmdToLyAst(self): #verified
+    modeName = self.MODE_KW().getText()[1:]
+
     return Key(
-        Pitch=Pitch(self.NOTE()),
-        Mode=Mode[self.MODE_KW().upper()]
+        Pitch=Pitch(self.NOTE().getText()),
+        Mode=Mode[modeName.upper()]
     )
 
 LP.Key_cmdContext.toLyAst = KeyCmdToLyAst
 
-def MarkCmdToLyAst(self):
-    return RehearsalMark()
+def MarkCmdToLyAst(self): #verified
+    return RehearsalMark(Mark=rehearsalCounter.nextMark())
 
 LP.Mark_cmdContext.toLyAst = MarkCmdToLyAst
 
 def SchemeCmdToLyAst(self): #verified
-    return SchemeCmd(Command=(self.SCHEME_GP().getText() if self.SCHEME_GP() is not None else self.SCHEME_ATOM()))
+    return SchemeCmd(Command=(self.SCHEME_GP().getText() if self.SCHEME_GP() is not None else self.SCHEME_ATOM().getText()))
 
 LP.Scheme_cmdContext.toLyAst = SchemeCmdToLyAst
 
-def TempoCmdToLyAst(self):
+def TempoCmdToLyAst(self): #verified
     return Tempo(
-        Desc=self.STRING(),
-        Unit=self.INTEGER()[0],
-        PerMin=self.INTEGER()[1]
+        Desc=self.STRING().getText(),
+        Unit=self.INTEGER()[0].getText(),
+        PerMin=self.INTEGER()[1].getText()
     )
 
 LP.Tempo_cmdContext.toLyAst = TempoCmdToLyAst
 
-def TimeCmdToLyAst(self):
-    return Time(
-        Numerator=self.TIME_SIG().INTEGER()[0],
-        Denominator=self.TIME_SIG().INTEGER()[1]
-    )
+def TimeCmdToLyAst(self): #verified
+    timestr = self.TIME_SIG().getText()
+    match = re.fullmatch('([0-9]+)\/([0-9]+)', timestr)
+
+    if not match:
+        raise ValueError('Invalid time signature')
+
+    (num, denom) = match.group(1, 2)
+
+    return Time(Numerator=num, Denominator=denom)
 
 LP.Time_cmdContext.toLyAst = TimeCmdToLyAst
 
