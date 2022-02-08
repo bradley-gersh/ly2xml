@@ -227,13 +227,19 @@ class Part(Node): # done
 
 @dataclass
 class Encoding(Node): #done
-    EncodingDate: date
+    Lilyver: Optional[str]
+    EncodingDate: date = date.today()
     Encoder: str = 'Bradley Gersh'
     Software: str = 'Ly2XML v0.01'
     EncodingDescription: str = 'Converted from Lilypond source with Ly2XML https://github.com/bradley-gersh/ly2xml'
 
     def __post_init__(self):
         checkStrings([self.Encoder, self.Software, self.EncodingDescription])
+
+        if self.Lilyver:
+            checkStrings(self.Lilyver)
+            self.EncodingDescription = 'Converted from Lilypond source (ver. {}) with Ly2XML https://github.com/bradley-gersh/ly2xml'.format(self.Lilyver)
+
 
     def enter(self):
         return '<encoding> <encoding-date>{}</encoding-date> <encoder>{}</encoder> <software>{}</software> <encoding-descripion>{}</encoding-description>'.format(self.EncodingDate.strftime('%Y-%m-%d'), self.Encoder, self.Software, self.EncodingDescription)
