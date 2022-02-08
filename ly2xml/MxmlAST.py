@@ -11,3 +11,4 @@ def writemxml(node):
     outStr += node.leave()
 
     return outStr
+

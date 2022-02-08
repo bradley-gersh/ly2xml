@@ -84,7 +84,8 @@ def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, o
         if type(child) == LP.Relative_blockContext:
             # For now, extract only the first note_block
             # from a relative_block
-            blockEvents.append(child.note_block().toLyAst(octaveStyle=OctaveStyle.RELATIVE))
+            octaveStyle = OctaveStyle.RELATIVE
+            blockEvents += child.note_block().toLyAst(octaveStyle=OctaveStyle.RELATIVE).NoteEvents
         elif type(child) == LP.Polyphony_blockContext:
             raise ValueError('Currently, polyphony blocks are not supported. Try a sample file without polyphony blocks, like sample_nopoly.ly')
         elif type(child) == LP.Note_cmdContext:
@@ -199,7 +200,7 @@ def NoteCmdToLyAst(self): #verified
     # if self.time_cmd() is not None:
         return self.time_cmd().toLyAst()
 
-    if cmdType == LP.Bar_cmdContext:
+    if cmdType == LP.Voice_cmdContext:
     # if self.voice_cmd() is not None:
         return self.voice_cmd().toLyAst()
 

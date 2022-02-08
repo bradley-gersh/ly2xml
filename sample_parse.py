@@ -32,6 +32,8 @@ def main(argv):
     except Exception as e:
         print("Error while attempting to convert parse tree to Lilypond AST:")
         print(e)
+    else:
+        return lyAst
 
     # Convert to a MusicXML AST
     # try:
