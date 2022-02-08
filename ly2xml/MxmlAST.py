@@ -14,120 +14,118 @@ def writemxml(node):
     return outStr
 
 # Methods to migrate LyAST to MxAST
-
-Node = Ly.Node
-
-def LyCommandToMxAst(Node):
+def LyCommandToMxAst(self):
     pass
 
 Ly.Command.toMxAst = LyCommandToMxAst
 
-def LyMetadataToMxAst(Node):
+def LyMetadataToMxAst(self):
     pass
 
 Ly.Metadata.toMxAst = LyMetadataToMxAst
 
-def LyHeaderToMxAst(Node):
+def LyHeaderToMxAst(self):
     pass
 
 Ly.Header.toMxAst = LyHeaderToMxAst
 
-def LySchemeCmdToMxAst(Node):
+def LySchemeCmdToMxAst(self):
     pass
 
 Ly.SchemeCmd.toMxAst = LySchemeCmdToMxAst
 
-def LyVersionToMxAst(Node):
+def LyVersionToMxAst(self):
     pass
 
 Ly.Version.toMxAst = LyVersionToMxAst
 
-def LyWithCmdToMxAst(Node):
+def LyWithCmdToMxAst(self):
     pass
 
 Ly.WithCmd.toMxAst = LyWithCmdToMxAst
 
-def LyBarlineToMxAst(Node):
+def LyBarlineToMxAst(self):
     pass
 
 Ly.Barline.toMxAst = LyBarlineToMxAst
 
-def LyClefToMxAst(Node):
+def LyClefToMxAst(self):
     pass
 
 Ly.Clef.toMxAst = LyClefToMxAst
 
-def LyDurationToMxAst(Node):
+def LyDurationToMxAst(self):
     pass
 
 Ly.Duration.toMxAst = LyDurationToMxAst
 
-def LyFermataToMxAst(Node):
+def LyFermataToMxAst(self):
     pass
 
 Ly.Fermata.toMxAst = LyFermataToMxAst
 
-def LyPitchToMxAst(Node):
+def LyPitchToMxAst(self):
     pass
 
 Ly.Pitch.toMxAst = LyPitchToMxAst
 
-def LyNoteToMxAst(Node):
+def LyNoteToMxAst(self):
     pass
 
 Ly.Note.toMxAst = LyNoteToMxAst
 
-def LyChordToMxAst(Node):
+def LyChordToMxAst(self):
     pass
 
 Ly.Chord.toMxAst = LyChordToMxAst
 
-def LyKeyToMxAst(Node):
+def LyKeyToMxAst(self):
     pass
 
 Ly.Key.toMxAst = LyKeyToMxAst
 
-def LyNoteGroupToMxAst(Node):
+def LyNoteGroupToMxAst(self):
     pass
 
 Ly.NoteGroup.toMxAst = LyNoteGroupToMxAst
 
-def LyRehearsalMarkToMxAst(Node):
+def LyRehearsalMarkToMxAst(self):
     pass
 
 Ly.RehearsalMark.toMxAst = LyRehearsalMarkToMxAst
 
-def LyStaffToMxAst(Node):
+def LyStaffToMxAst(self):
     pass
 
 Ly.Staff.toMxAst = LyStaffToMxAst
 
-def LyStaffGroupToMxAst(Node):
+def LyStaffGroupToMxAst(self):
     pass
 
 Ly.StaffGroup.toMxAst = LyStaffGroupToMxAst
 
-def LyScoreToMxAst(Node):
+def LyScoreToMxAst(self):
     pass
 
 Ly.Score.toMxAst = LyScoreToMxAst
 
-def LyScoreFileToMxAst(Node):
+def LyScoreFileToMxAst(self):
+    return MusXMLFile(Score=ScorePartwise(Header=self.Header))
     pass
 
 Ly.ScoreFile.toMxAst = LyScoreFileToMxAst
 
-def LyTempoToMxAst(Node):
+def LyTempoToMxAst(self):
     pass
 
 Ly.Tempo.toMxAst = LyTempoToMxAst
 
-def LyTimeToMxAst(Node):
+def LyTimeToMxAst(self):
     pass
 
 Ly.Time.toMxAst = LyTimeToMxAst
 
-def LyVoiceToMxAst(Node):
+def LyVoiceToMxAst(self):
     pass
 
 Ly.Voice.toMxAst = LyVoiceToMxAst
