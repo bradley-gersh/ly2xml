@@ -6,7 +6,7 @@
 # instructions at https://www.antlr.org/.
 #
 ANTLR4 := java -jar ~/Code/lib/java/antlr-4.9.3-complete.jar
-SRC := lypy
+SRC := ly2xml
 LEXER := $(SRC)/LilypondLexer.g4
 PARSER := $(SRC)/LilypondParser.g4
 
@@ -16,6 +16,8 @@ PARSER := $(SRC)/LilypondParser.g4
 #
 python:
 	$(ANTLR4) -Dlanguage=Python3 -no-listener -no-visitor $(LEXER) $(PARSER)
+	$(RM) $(SRC)/*.interp
+	$(RM) $(SRC)/*.tokens
 
 #
 # Rebuild the parser in Java after edits to the grammar file

@@ -34,7 +34,7 @@ note_block:
         | note_cmd
         | polyphony_block
         | chord
-        | NOTE
+        | note
         | voice_block
     )+;
 relative_block : REL_BLOCK_N note_block END_NOTEBLOCK;
@@ -45,7 +45,8 @@ polyphony_block:
             NEXT_NOTEBLOCK_P NEW_NOTEBLOCK_P note_block END_NOTEBLOCK
         )* END_POLYPHONY_P
     );
-chord : LANGLE NOTE+ RANGLE (INTEGER | INTEGER DOT)?;
+chord : LANGLE note+ RANGLE (INTEGER | INTEGER DOT)?;
+note  : NOTE;
 
 // One-line commands
 note_cmd:

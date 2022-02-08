@@ -4,94 +4,103 @@ from LilypondParser import LilypondParser as LP
 from LilypondDataclasses import *
 
 # Methods to create AST nodes
-def ScoreFileToLyAst(self):
-    # Only the first header (metadata) block and first version
-    # commands are accepted.
+def ScoreFileToLyAst(self): #verified
+    # Only the first header (metadata) block, first version, and
+    # first score commands are accepted.
     return ScoreFile(
         Header=self.header_block()[0].toLyAst(),
         SchemeCmds=[scheme_cmd.toLyAst() for scheme_cmd in self.scheme_cmds()],
-        Score=self.score_block().toLyAst(),
+        Score=self.score_block()[0].toLyAst(),
         Version=self.version_cmd()[0].toLyAst()
     )
 
 LP.Score_fileContext.toLyAst = ScoreFileToLyAst
 
-def HeaderBlockToLyAst(self):
+def HeaderBlockToLyAst(self): #verified
     return Header(
         # Currently this does not handle the case where Value is
         # a scheme_cmd
-        Metadata=[Metadata(Field=line.ID().getText(), Value=line.STRING().getText()) for line in self.assignment()]
+        Metadata=[Metadata(Field=line.ID().getText(), Value=line.STRING().getText()) for line in self.assignment() if line.STRING() is not None]
     )
 
 LP.Header_blockContext.toLyAst = HeaderBlockToLyAst
 
-def AssignmentToLyAst(self):
+def AssignmentToLyAst(self): #verified
     # Handled by parent node (HeaderBlock)
     pass
 
 LP.AssignmentContext.toLyAst = AssignmentToLyAst
 
-def ScoreBlockToLyAst(self):
+def ScoreBlockToLyAst(self): #verified
     return Score(StaffGroups=[staffgroup.toLyAst() for staffgroup in self.staffgroup_block()])
 
 LP.Score_blockContext.toLyAst = ScoreBlockToLyAst
 
-def StaffGroupBlockToLyAst(self):
+def StaffGroupBlockToLyAst(self): #verified
     return StaffGroup(Staves=[staff.toLyAst() for staff in self.staff_block()])
 
 LP.Staffgroup_blockContext.toLyAst = StaffGroupBlockToLyAst
 
-def StaffBlockToLyAst(self):
-    (firstTime, firstKey) = self.prefix_block().toLyAst() if self.prefix_block() is not None else (Time(4, 4), Key())
+def StaffBlockToLyAst(self): #verified
+    (firstTimeSig, firstKeySig) = self.prefix_block().toLyAst() if self.prefix_block() is not None else (Time(4, 4), Key())
 
     return Staff(
-        WithCmd=self.with_block().toLyAst(),
-        Notes=self.note_block().toLyAst()
+        # For now, we will assume there is only one note block.
+        # We could do the below for multiple blocks to get a list
+        # of lists, then use a reducer to concatenate them into one.
+        # WithCmd=self.with_block().toLyAst(),
+        Notes=self.note_block()[0].toLyAst(firstTimeSig=firstTimeSig, firstKeySig=firstKeySig)
     )
 
 LP.Staff_blockContext.toLyAst = StaffBlockToLyAst
 
-def PrefixBlockToLyAst(self):
+def PrefixBlockToLyAst(self): #verified
     # Handled by parent node
     pass
 
 LP.Prefix_blockContext.toLyAst = PrefixBlockToLyAst
 
-def WithBlockToLyAst(self):
+def WithBlockToLyAst(self): #verified
     # We will ignore the \with command for now, which
     # involves formatting issues.
     pass
 
 LP.With_blockContext.toLyAst = WithBlockToLyAst
 
-def NoteBlockToLyAst(self, voiceNumber=1, firstTime=None, firstKey=None):
-    prefix = [] # Need to process
+def NoteBlockToLyAst(self, voiceNumber=1, firstTimeSig=None, firstKeySig=None, octaveStyle=OctaveStyle.DEFAULT): #verified, but tricky
+    blockEvents = []
 
-    if firstTime is not None:
-        prefix.append(firstTime)
-    if firstKey is not None:
-        prefix.append(firstKey)
+    if firstTimeSig is not None:
+        blockEvents.append(firstTimeSig)
+    if firstKeySig is not None:
+        blockEvents.append(firstKeySig)
 
-    blockEvents = [child for child in self.children]
-
-    octaveStyle = OctaveStyle.RELATIVE if self.relative_block() is not None else OctaveStyle.DEFAULT
+    for child in self.children:
+        if type(child) == LP.Relative_blockContext:
+            # For now, extract only the first note_block
+            # from a relative_block
+            blockEvents.append(child.note_block().toLyAst(octaveStyle=OctaveStyle.RELATIVE))
+        elif type(child) == LP.Note_cmdContext:
+            blockEvents.append(child.toLyAst())
+        #elif type(child) == LP.
+        blockEvents.append(child) # commands generally
 
     return NoteGroup(NoteEvents=blockEvents, octaveStyle=octaveStyle, voiceNumber=voiceNumber)
 
 LP.Note_blockContext.toLyAst = NoteBlockToLyAst
 
-def RelativeBlockToLyAst(self):
+def RelativeBlockToLyAst(self): #verified
     # Relative blocks are handled at the NoteBlock level.
     pass
 
 LP.Relative_blockContext.toLyAst = RelativeBlockToLyAst
 
-def VoiceBlockToLyAst(self, voiceNumber=1):
+def VoiceBlockToLyAst(self, voiceNumber=1): #verified
     # For now, we will not handle all the complexity of the
     # \Voice command and assume that we only need to dig out
     # a bare note block, which needs to be assigned a voice
     # number.
-    return self.note_block.toLyAst(voiceNumber=voiceNumber)
+    return self.note_block()[0].toLyAst(voiceNumber=voiceNumber)
 
 LP.Voice_blockContext.toLyAst = VoiceBlockToLyAst
 
@@ -172,8 +181,8 @@ def MarkCmdToLyAst(self):
 
 LP.Mark_cmdContext.toLyAst = MarkCmdToLyAst
 
-def SchemeCmdToLyAst(self):
-    return SchemeCmd(Command=(self.SCHEME_GP() if self.SCHEME_GP() is not None else self.SCHEME_ATOM()))
+def SchemeCmdToLyAst(self): #verified
+    return SchemeCmd(Command=(self.SCHEME_GP().getText() if self.SCHEME_GP() is not None else self.SCHEME_ATOM()))
 
 LP.Scheme_cmdContext.toLyAst = SchemeCmdToLyAst
 
@@ -194,7 +203,7 @@ def TimeCmdToLyAst(self):
 
 LP.Time_cmdContext.toLyAst = TimeCmdToLyAst
 
-def VersionCmdToLyAst(self):
+def VersionCmdToLyAst(self): #verified
     return Version(LilypondVer=self.VERSION_STR().getText())
 
 LP.Version_cmdContext.toLyAst = VersionCmdToLyAst
