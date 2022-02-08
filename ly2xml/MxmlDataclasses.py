@@ -29,7 +29,7 @@ class Direction(Event): # done
     def enter(self):
         pass
 
-    def exit(self):
+    def leave(self):
         pass
 
 @dataclass
@@ -45,7 +45,7 @@ class Barline(Event): # done
 
         return '<barline>'
 
-    def exit(self):
+    def leave(self):
         return '</barline>'
 
 
@@ -61,7 +61,7 @@ class Pitch(Node): # done
     def enter(self):
         return '<pitch> <step>{}</step> <octave>{}</octave>'.format(self.Step, str(self.Octave))
 
-    def exit(self):
+    def leave(self):
         return '</pitch>'
 
 
@@ -79,7 +79,7 @@ class Rest(Event): # done
 
         return '<rest />'
 
-    def exit(self):
+    def leave(self):
         pass
 
 
@@ -105,9 +105,9 @@ class Note(Event): # done
             outStr += '<chord /> '
 
         if self.Pitch:
-            outStr += self.Pitch.enter() + self.Pitch.exit()
+            outStr += self.Pitch.enter() + self.Pitch.leave()
         if self.Rest:
-            outStr += self.Rest.enter() + self.Rest.exit()
+            outStr += self.Rest.enter() + self.Rest.leave()
 
         outStr += '<duration>{}</duration> <voice>{}</voice> <type>{}</type> '.format(str(self.Duration), str(self.Voice), self.Type)
 
@@ -117,7 +117,7 @@ class Note(Event): # done
         return outStr
 
 
-    def exit(self):
+    def leave(self):
         return '</note>'
 
 
@@ -132,7 +132,7 @@ class Clef(Node): # done
     def enter(self):
         return '<clef> <sign>{}</sign> <line>{}</line>'.format(self.Sign, str(self.Line))
 
-    def exit(self):
+    def leave(self):
         return '</clef>'
 
 
@@ -147,7 +147,7 @@ class Time(Node): # done
     def enter(self):
         return '<time> <beats>{}</beats> <beat-type>{}</beat-type>'.format(str(self.Beats), self.BeatType)
 
-    def exit(self):
+    def leave(self):
         return '</time>'
 
 
@@ -162,7 +162,7 @@ class Key(Node): # done
     def enter(self):
         return '<key> <fifths>{}</fifths> <mode>{}</mode>'.format(str(self.Fifths), self.Mode)
 
-    def exit(self):
+    def leave(self):
         return '</key>'
 
 @dataclass
@@ -188,7 +188,7 @@ class Attributes(Node): # done
     def enter(self):
         return '<attributes>'
 
-    def exit(self):
+    def leave(self):
         return '</attributes>'
 
 # What if clef changes in middle of measure?
@@ -208,7 +208,7 @@ class Measure(Node): # done
 
         return '<measure number="{}">'.format(int(self.Number))
 
-    def exit(self):
+    def leave(self):
         return '</measure>'
 
 @dataclass
@@ -223,7 +223,7 @@ class Part(Node): # done
     def enter(self):
         return '<part id="{}">'.format(self.PartName)
 
-    def exit(self):
+    def leave(self):
         return '</part>'
 
 @dataclass
@@ -239,7 +239,7 @@ class Encoding(Node): #done
     def enter(self):
         return '<encoding> <encoding-date>{}</encoding-date> <encoder>{}</encoder> <software>{}</software> <encoding-descripion>{}</encoding-description>'.format(self.EncodingDate.strftime('%Y-%m-%d'), self.Encoder, self.Software, self.EncodingDescription)
 
-    def exit(self):
+    def leave(self):
         return '</encoding>'
 
 @dataclass
@@ -253,7 +253,7 @@ class Creator(Node): #done
     def enter(self):
         return '<creator type="{}">{}'.format(self.Type, self.Content)
 
-    def exit(self):
+    def leave(self):
         return '</creator>'
 
 @dataclass

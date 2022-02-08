@@ -38,10 +38,17 @@ def main(argv):
     #     mxAst = lyAst.toMxAst()
     #     print("Lilypond AST generated from parse tree.")
     # except Exception as e:
-    #     print("Error while attempting to convert parse tree to Lilypond AST:")
+    #     print("Error while attempting to convert between Lilypond AST and MusicXML AST:")
     #     print(e)
 
     # Produce MusicXML file from MusicXML AST
+    # try:
+    #     with open(argv[2], mode="w") as file:
+    #         mxmlStr = writemxml(mxAst)
+    #         file.write(mxmlStr)
+    # except Exception as e:
+    #     print("Error while attempting to write MusicXML file:")
+    #     print(e)
 
     # `tree` is the unedited parse tree. For documentation on the fields and
     # methods available on this tree and its nodes, see the documentation for
