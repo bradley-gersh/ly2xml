@@ -2,7 +2,6 @@ from typing import List, Optional
 from dataclasses import dataclass
 from enum import Enum, auto
 from datetime import date
-import re
 
 from .LilypondDataclasses import Node
 
@@ -258,7 +257,7 @@ class Creator(Node): #done
 
 @dataclass
 class Identification(Node): #done
-    Creator: Optional[Creator]
+    Creators: Optional[List[Creator]]
     Encoding: Optional[Encoding]
 
     def __post_init__(self):
@@ -299,6 +298,9 @@ class Work(Node): # done
 @dataclass
 class PartName(Node): # done
     Content: str
+
+    def __post_init__(self):
+        checkStrings(self.Content)
 
     def enter(self):
         return '<part-name>' + self.Content
